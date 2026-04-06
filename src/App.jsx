@@ -1,5 +1,14 @@
+import { Route, Routes } from "react-router-dom"
+import { Home } from "./pages/Home"
+
 function App() {
-  return (<h1>Olá mundo</h1>)
+  return (
+    <div>
+      <Routes>
+        <Route element={<Home/>} path="/Home"/>
+      </Routes>
+    </div>
+  )
 }
 
 export default App
