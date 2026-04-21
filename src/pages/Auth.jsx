@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { FormLogin } from "../components/FormLogin";
-import { FormRegister } from "../components/FormRegister";
 
 const Auth = () => {
   return (
@@ -14,7 +13,6 @@ const Auth = () => {
           <button>Criar minha conta</button>
         </span>
         <FormLogin />
-        <FormRegister />
       </section>
     </div>
   );

@@ -3,7 +3,7 @@ import { useState } from "react";
 const FormLogin = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
 
   return (
