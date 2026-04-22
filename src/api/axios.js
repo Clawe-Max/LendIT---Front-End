@@ -6,6 +6,14 @@ const api = axios.create({
   withCredentials: true
 });
 
+let authHandlers = {
+  logout: () => {}
+};
+
+export const setAuthHandlers = (handlers) => {
+  authHandlers = handlers;
+};
+
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -64,7 +72,7 @@ api.interceptors.response.use(
         processQueue(err, null);
         setToken(null);
 
-        window.dispatchEvent(new Event("auth:logout"));
+        authHandlers.logout();
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

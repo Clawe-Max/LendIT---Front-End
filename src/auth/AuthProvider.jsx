@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import api from "@/api/axios";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getToken, setToken } from "./tokenService";
 import { AuthContext } from "./AuthContext";
+import { setAuthHandlers } from "../api/axios";
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -10,47 +10,32 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       const token = getToken();
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        await api.get("/user/me");
+      if (token) {
         setIsAuthenticated(true);
-      } catch {
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
 
     initAuth();
-
-    const handleLogout = () => {
-      setIsAuthenticated(false);
-    };
-
-    window.addEventListener("auth:logout", handleLogout);
-
-    return () => {
-      window.removeEventListener("auth:logout", handleLogout);
-    };
   }, []);
 
-  const login = (token) => {
+  const login = useCallback((token) => {
     setToken(token);
     setIsAuthenticated(true);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     setIsAuthenticated(false);
-  };
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  useEffect(() => {
+    setAuthHandlers({ logout });
+  }, [logout]);
+
+  const value = useMemo(() => {
+    return { isAuthenticated, loading, login, logout };
+  }, [isAuthenticated, loading, login, logout]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
