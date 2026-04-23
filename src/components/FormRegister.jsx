@@ -1,14 +1,28 @@
 import { useState } from "react";
+import api from "../api/axios";
 
-const FormRegister = () => {
+const REGISTER_URL = "/user";
+
+const FormRegister = ({ setForm }) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
+  const [error, setError] = useState(null);
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      await api.post(REGISTER_URL, formData);
+      setForm(true);
+    } catch (err) {
+      setError(err.response.data.message);
+    }
+  }
+
   return (
-    <form action="">
-      <div>
+    <form action="" onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-4">
         <input
           value={formData.username}
           onChange={(e) =>
@@ -16,6 +30,7 @@ const FormRegister = () => {
           }
           type="text"
           placeholder="*Seu nome"
+          className="w-full p-3 rounded-lg bg-zinc-800 text-white placeholder-zinc-500 outline-none focus:ring-2 focus:ring-yellow-500"
         />
         <input
           value={formData.email}
@@ -24,6 +39,7 @@ const FormRegister = () => {
           }
           type="email"
           placeholder="*E-mail"
+          className="w-full p-3 rounded-lg bg-zinc-800 text-white placeholder-zinc-500 outline-none focus:ring-2 focus:ring-yellow-500"
         />
         <input
           value={formData.password}
@@ -32,9 +48,10 @@ const FormRegister = () => {
           }
           type="password"
           placeholder="*Senha"
+          className="w-full p-3 rounded-lg bg-zinc-800 text-white placeholder-zinc-500 outline-none focus:ring-2 focus:ring-yellow-500"
         />
       </div>
-      <ul>
+      {/* <ul className="mt-4 text-sm">
         <li>
           <h1>Siga essas dicas:</h1>
         </li>
@@ -51,9 +68,11 @@ const FormRegister = () => {
             palavras comuns
           </p>
         </li>
-      </ul>
-
-      <button>Criar</button>
+      </ul> */}
+      {error && <span className="text-orange-700">{error}</span>}
+      <button className="w-full mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 rounded-lg transition">
+        Criar
+      </button>
       <p>
         Ao se cadastrar, você aceita os Termos de Uso e a Política de
         Privacidade

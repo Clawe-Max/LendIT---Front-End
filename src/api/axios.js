@@ -3,11 +3,11 @@ import { getToken, setToken } from "../auth/tokenService";
 
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
-  withCredentials: true
+  withCredentials: true,
 });
 
 let authHandlers = {
-  logout: () => {}
+  logout: () => {},
 };
 
 export const setAuthHandlers = (handlers) => {
@@ -52,7 +52,7 @@ api.interceptors.response.use(
               originalRequest.headers.authorization = `Bearer ${token}`;
               resolve(api(originalRequest));
             },
-            reject
+            reject,
           });
         });
       }
@@ -80,7 +80,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
