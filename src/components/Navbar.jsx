@@ -20,7 +20,7 @@ export function Navbar() {
   }
 
   return (
-    <nav className="bg-zinc-800 flex items-center justify-between px-5 h-13">
+    <nav className="fixed top-0 left-0 w-full bg-zinc-800 flex items-center justify-between px-5 h-13">
       <div className="flex items-center gap-5">
         <span className="text-yellow-500 font-semibold tracking-widest">
           LendIT
