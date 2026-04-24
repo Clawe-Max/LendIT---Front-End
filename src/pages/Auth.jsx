@@ -5,7 +5,7 @@ import { FormRegister } from "../components/FormRegister";
 import { useState } from "react";
 
 const Auth = () => {
-  const [changeForm, setChangeForm] = useState(null);
+  const [changeForm, setChangeForm] = useState(true);
   return (
     <div className="min-h-full flex flex-col justify-center items-center">
       <Link to="/" className=" text-yellow-500 flex gap-2">

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getToken, setToken } from "./tokenService";
 import { AuthContext } from "./AuthContext";
-import { setAuthHandlers } from "../api/axios";
+import api, { setAuthHandlers } from "../api/axios";
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -12,6 +12,14 @@ export const AuthProvider = ({ children }) => {
       const token = getToken();
       if (token) {
         setIsAuthenticated(true);
+      } else {
+        try {
+          const res = await api.post("/user/refresh");
+          setToken(res.data.accessToken);
+          setIsAuthenticated(true);
+        } catch {
+          setIsAuthenticated(false);
+        }
       }
       setLoading(false);
     };
