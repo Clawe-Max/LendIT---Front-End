@@ -1,4 +1,5 @@
 import { Mail, UserIcon } from "lucide-react";
+import { MinhaConta } from "../components/User/MinhaConta";
 
 function User() {
   return (
@@ -22,16 +23,17 @@ function User() {
         </div>
       </div>
       <span className="flex gap-8">
-        <button className="flex py-2 px-4  bg-yellow-800 shadow-xl/30 rounded-2xl text-white font-semibold">
+        <button className="flex py-2 px-4  bg-yellow-950 shadow-xl/30 rounded-2xl text-neutral-500 font-semibold">
           Meus Jogos
         </button>
         <button className="flex py-2 px-4 bg-yellow-950 shadow-xl/30 rounded-3xl text-neutral-500 font-semibold">
           Meus Pedidos
         </button>
-        <button className="flex py-2 px-4 bg-yellow-950 shadow-xl/30 rounded-3xl text-neutral-500 font-semibold">
+        <button className="flex py-2 px-4 bg-yellow-800 shadow-xl/30 rounded-3xl text-white font-semibold">
           Minha Conta
         </button>
       </span>
+      <MinhaConta />
     </div>
   );
 }

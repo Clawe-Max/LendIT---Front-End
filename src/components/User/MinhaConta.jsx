@@ -1,0 +1,55 @@
+const MinhaConta = () => {
+  return (
+    <div className="min-h-full min-w-full flex flex-col justify-center items-center gap-y-10">
+      <span className="flex flex-col gap-8 w-1/3">
+        <h1 className="text-white text-4xl">Minha Conta</h1>
+        <div className="bg-yellow-800 p-8 rounded-2xl shadow-2xl flex flex-col gap-2 justify-start">
+          <h2 className="text-white text-3xl">Informações públicas</h2>
+          <p className="text-white pb-3">
+            Estas informações serão exibidas publicamente.
+          </p>
+          <div className="flex flex-col gap-1">
+            <p className="text-white text-xs">Nome de Exibição</p>
+            <input
+              type=""
+              placeholder="*Nome de Exibição"
+              className="bg-amber-50 p-3 rounded-xl placeholder-zinc-500 outline-none focus:ring-2 focus:ring-offset-lime-200 placeholder:font-bold w-full"
+            />
+          </div>
+        </div>
+      </span>
+      <span>
+        <h1 className="text-white">Alterar Senha</h1>
+        <div className="bg-neutral-600 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-yellow-700/30">
+          <div>
+            <p className="text-white">Nova senha</p>
+            <input type="" placeholder="*Nova senha" />
+          </div>
+          <div>
+            <p className="text-white">Confirmar senha</p>
+            <input type="" placeholder="*Confirmar senha" />
+          </div>
+          <div>
+            <p className="text-white">Senha atual</p>
+            <input type="" placeholder="*Senha atual" />
+          </div>
+        </div>
+      </span>
+      <span>
+        <h1 className="text-white">Alterar E-mail</h1>
+        <div className="bg-neutral-600 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-yellow-700/30">
+          <div>
+            <p className="text-white">E-mail</p>
+            <input type="" placeholder="E-mail" />
+          </div>
+          <div>
+            <p className="text-white">Senha atual</p>
+            <input type="" placeholder="Senha atual" />
+          </div>
+        </div>
+      </span>
+    </div>
+  );
+};
+
+export { MinhaConta };
