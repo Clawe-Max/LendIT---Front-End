@@ -1,3 +1,5 @@
+import { Input } from "../Input";
+
 const MinhaConta = () => {
   return (
     <div className="min-h-full min-w-full flex flex-col justify-center items-center gap-y-10">
@@ -9,12 +11,10 @@ const MinhaConta = () => {
             Estas informações serão exibidas publicamente.
           </p>
           <div className="flex flex-col gap-1">
-            <p className="text-white text-xs">Nome de Exibição</p>
-            <input
-              type=""
-              placeholder="*Nome de Exibição"
-              className="bg-amber-50 p-3 rounded-xl placeholder-zinc-500 outline-none focus:ring-2 focus:ring-offset-lime-200 placeholder:font-bold w-full"
-            />
+            <label htmlFor="username" className="text-white text-xs">
+              Nome de Exibição
+            </label>
+            <Input id="username" type="text" placeholder="*Nome de exibição" />
           </div>
         </div>
       </span>

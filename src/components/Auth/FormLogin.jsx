@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../../auth/useAuth";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axios";
+import api from "../../api/axios";
+import { Input } from "../Input";
 
 const LOGIN_URL = "/user/login";
 
 const FormLogin = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -25,26 +26,34 @@ const FormLogin = () => {
       setError(message);
     }
   }
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((state) => ({ ...state, [name]: value }));
+    setError(null);
+  }
   return (
     <form action="" onSubmit={handleSubmit} className="flex flex-col">
       <div className="flex flex-col gap-4">
-        <input
-          value={formData.email}
-          onChange={(e) =>
-            setFormData((state) => ({ ...state, email: e.target.value }))
-          }
+        <Input
+          name="email"
           type="email"
+          onChange={handleChange}
           placeholder="*E-mail"
-          className="w-full p-3 rounded-lg bg-zinc-800 text-white placeholder-zinc-500 outline-none focus:ring-2 focus:ring-yellow-500"
-        />
-        <input
-          value={formData.password}
-          onChange={(e) =>
-            setFormData((state) => ({ ...state, password: e.target.value }))
+          value={formData.email}
+          className={
+            "rounded-lg bg-zinc-800 text-white placeholder-zinc-500 focus:ring-yellow-500"
           }
+        />
+        <Input
+          name="password"
           type="password"
+          onChange={handleChange}
           placeholder="*Senha"
-          className="w-full p-3 rounded-lg bg-zinc-800 text-white placeholder-zinc-500 outline-none focus:ring-2 focus:ring-yellow-500"
+          value={formData.password}
+          className={
+            "rounded-lg bg-zinc-800 text-white placeholder-zinc-500 focus:ring-yellow-500"
+          }
         />
       </div>
       <div className="flex items-center justify-between mt-4 text-sm">
@@ -52,7 +61,7 @@ const FormLogin = () => {
           <input type="checkbox" className="accent-yellow-500" />
           Lembrar
         </label>
-        <a href="" className="text-yellow-500 hover:underline">
+        <a href="" target="blank" className="text-yellow-500 hover:underline">
           Esqueci minha senha
         </a>
       </div>

@@ -10,8 +10,8 @@ function App() {
   return (
     <AuthProvider>
       <UserProvider>
-        <div className="min-h-screen bg-[url('./assets/Plano_de_fundo_do_projeto.png')] bg-no-repeat bg-cover backdrop-opacity-90">
-          <div className="min-h-screen bg-black/75 backdrop-blur">
+        <div className="min-h-screen bg-[url('./assets/Plano_de_fundo_do_projeto.png')] bg-no-repeat bg-cover bg-fixed">
+          <div className="min-h-screen bg-black/75">
             <Routes>
               <Route element={<Auth />} path="/Auth" />
               <Route path="/" element={<Content />}>

@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
-import { FormLogin } from "../components/FormLogin";
+import { FormLogin } from "../components/Auth/FormLogin";
 import { Dices } from "lucide-react";
-import { FormRegister } from "../components/FormRegister";
+import { FormRegister } from "../components/Auth/FormRegister";
 import { useState } from "react";
 
 const Auth = () => {
   const [changeForm, setChangeForm] = useState(true);
   return (
-    <div className="min-h-full flex flex-col justify-center items-center">
+    <div className="min-h-screen flex flex-col justify-center items-center">
       <Link to="/" className=" text-yellow-500 flex gap-2">
         <Dices className="w-8 h-8" />
         <h1 className="text-3xl font-bold mb-6 tracking-wide"> LendIT</h1>
