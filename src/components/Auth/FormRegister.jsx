@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../../api/axios";
 import { Input } from "../Input";
+import { ErrorMessage } from "../ErrorMessage";
 
 const REGISTER_URL = "/user";
 
@@ -10,14 +11,20 @@ const FormRegister = ({ setForm }) => {
     email: "",
     password: ""
   });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   async function handleSubmit(e) {
     e.preventDefault();
     try {
+      setLoading(true);
       await api.post(REGISTER_URL, formData);
       setForm(true);
     } catch (err) {
-      setError(err.response.data.message);
+      const message =
+        err.response?.data?.message || "Erro ao conectar com o servidor";
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -79,8 +86,11 @@ const FormRegister = ({ setForm }) => {
           </p>
         </li>
       </ul> */}
-      {error && <span className="text-orange-700">{error}</span>}
-      <button className="w-full mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 rounded-lg transition">
+      <ErrorMessage className="pt-2" message={error} />
+      <button
+        disabled={loading}
+        className="w-full mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 rounded-lg transition disabled:opacity-50"
+      >
         Criar
       </button>
       <p>

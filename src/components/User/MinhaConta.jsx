@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Input } from "../Input";
 import { CardForm } from "./CardForm";
 import { UserButton } from "./UserButton";
+import { ErrorMessage } from "../ErrorMessage";
 
 const MinhaConta = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    username: "",
+    username: ""
   });
+  const [error, setError] = useState(null);
   const [passwordCheck, setPasswordCheck] = useState("");
   function handleChange(e) {
     const { name, value } = e.target;
@@ -17,6 +19,9 @@ const MinhaConta = () => {
   }
   async function handleSubmit(e) {
     e.preventDefault();
+    if (passwordCheck !== formData.password) {
+      setError("As senhas não coincidem.");
+    }
   }
   return (
     <form
@@ -62,8 +67,11 @@ const MinhaConta = () => {
           <Input
             id="passwordCheck"
             name="passwordCheck"
-            type="passwordCheck"
-            onChange={(e) => setPasswordCheck(e.target.value)}
+            type="password"
+            onChange={(e) => {
+              setPasswordCheck(e.target.value);
+              setError(null);
+            }}
             value={passwordCheck}
             placeholder="*Confirmar senha"
           />
@@ -84,7 +92,8 @@ const MinhaConta = () => {
           />
         </div>
       </CardForm>
-      <div className="m-5">
+      <ErrorMessage message={error} />
+      <div className="mb-5">
         <UserButton
           buttonName="Salvar Alterações"
           className="bg-yellow-700 text-white hover:brightness-110 drop-shadow-xl/50"

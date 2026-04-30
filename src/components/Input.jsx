@@ -5,7 +5,7 @@ const Input = ({ className, ...rest }) => {
     <input
       {...rest}
       className={cn(
-        "w-full p-3 outline-none focus:ring-2 bg-amber-50 placeholder-zinc-500 focus:ring-offset-lime-200 rounded-xl placeholder:font-bold",
+        "w-full p-3 outline-none focus:ring-2 bg-amber-50 text-zinc-800 placeholder-zinc-500 focus:ring-offset-lime-200 rounded-xl placeholder:font-bold",
         className
       )}
     />

@@ -14,11 +14,11 @@ function User() {
         />
         <h1 className="text-5xl text-amber-50">Olá, USER</h1>
         <div className="flex row-auto bg-yellow-900 shadow-xl/30 text-amber-50 gap-5 p-1 px-3 rounded-xl">
-          <h2 className="flex row-auto gap-1">
+          <h2 className="flex items-center row-auto gap-1">
             <UserIcon />
             Usuário
           </h2>{" "}
-          <h2 className="flex row-auto gap-1">
+          <h2 className="flex items-center row-auto gap-1">
             <Mail />
             usuário@email.com
           </h2>
