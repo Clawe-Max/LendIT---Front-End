@@ -19,9 +19,11 @@ export const UserProvider = ({ children }) => {
       try {
         const res = await api.get("/user/me");
         setUser(res.data);
-      } catch {
+      } catch (err) {
         setUser(null);
-        logout();
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          logout();
+        }
       } finally {
         setLoadingUser(false);
       }
