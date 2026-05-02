@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Input } from "../Input";
 import { CardForm } from "./CardForm";
 import { UserButton } from "./UserButton";
 import { ErrorMessage } from "../ErrorMessage";
+import { UserContext } from "../../user/UserContext";
 
 const MinhaConta = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    username: ""
+    username: "",
   });
   const [error, setError] = useState(null);
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -23,6 +24,7 @@ const MinhaConta = () => {
       setError("As senhas não coincidem.");
     }
   }
+  const { user, loadingUser } = useContext(UserContext);
   return (
     <form
       onSubmit={handleSubmit}
@@ -42,7 +44,7 @@ const MinhaConta = () => {
             type="text"
             onChange={handleChange}
             value={formData.username}
-            placeholder="*Nome de exibição"
+            placeholder={user.data.Username}
           />
         </div>
       </CardForm>
@@ -87,7 +89,7 @@ const MinhaConta = () => {
             name="email"
             type="email"
             onChange={handleChange}
-            placeholder="*E-mail"
+            placeholder={user.data.Email}
             value={formData.email}
           />
         </div>
