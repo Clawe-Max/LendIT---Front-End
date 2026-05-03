@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../../api/axios";
-import { Input } from "../Input";
-import { ErrorMessage } from "../ErrorMessage";
+import { ErrorMessage } from "../common/ErrorMessage";
+import { Input } from "../common/Input";
 
 const REGISTER_URL = "/user";
 

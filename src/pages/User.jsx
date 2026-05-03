@@ -1,7 +1,7 @@
 import { CircleUser, Mail, UserIcon } from "lucide-react";
 import { MinhaConta } from "../components/User/MinhaConta";
 import { UserButton } from "../components/User/UserButton";
-import { DeleteButton } from "../components/DeleteButton";
+import { DeleteButton } from "../components/User/DeleteButton";
 import { useContext } from "react";
 import { UserContext } from "../user/UserContext";
 

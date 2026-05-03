@@ -1,15 +1,15 @@
 import { useContext, useState } from "react";
-import { Input } from "../Input";
 import { CardForm } from "./CardForm";
 import { UserButton } from "./UserButton";
-import { ErrorMessage } from "../ErrorMessage";
 import { UserContext } from "../../user/UserContext";
+import { Input } from "../common/Input";
+import { ErrorMessage } from "../common/ErrorMessage";
 
 const MinhaConta = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    username: "",
+    username: ""
   });
   const [error, setError] = useState(null);
   const [passwordCheck, setPasswordCheck] = useState("");
@@ -21,10 +21,10 @@ const MinhaConta = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     if (passwordCheck !== formData.password) {
-      setError("As senhas não coincidem.");
+      return setError("As senhas não coincidem.");
     }
   }
-  const { user, loadingUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   return (
     <form
       onSubmit={handleSubmit}

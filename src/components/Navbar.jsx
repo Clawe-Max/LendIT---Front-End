@@ -22,14 +22,13 @@ export function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-zinc-800 flex items-center justify-between px-5 h-13">
-      <div className="flex items-center gap-5">
-        <Link to="/">
-          <button className="text-yellow-500 font-semibold tracking-widest cursor-pointer hover:scale-105 flex gap-2">
-            <DicesIcon />
-            LendIT
-          </button>
-        </Link>
-      </div>
+      <Link
+        to="/"
+        className="text-yellow-500 font-semibold tracking-widest cursor-pointer hover:scale-105 flex gap-2 items-center"
+      >
+        <DicesIcon />
+        LendIT
+      </Link>
       <div className="flex items-center bg-zinc-900 border border-zinc-700 rounded-md px-2.5 h-8 gap-1.5 focus-within:ring-2 focus-within:ring-yellow-500 transition-all max-w-1/3 w-full">
         <svg
           className="w-3 h-3 stroke-zinc-600"
@@ -47,71 +46,71 @@ export function Navbar() {
         />
       </div>
 
-      <div className="flex items-center gap-2">
-        <button className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-zinc-700 transition-colors">
-          <svg
-            className="w-4 h-4 stroke-zinc-400"
-            viewBox="0 0 24 24"
-            fill="none"
-            strokeWidth="1.8"
-          >
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
-          </svg>
-        </button>
-        <div className="flex items-center gap-1">
-          <div className="relative">
-            <button
-              onClick={() => setOpenMenu(!openMenu)}
-              className="flex items-center gap-1.5 text-sm text-zinc-400 px-3 py-1.5 rounded-md hover:bg-zinc-700 hover:text-white transition-colors"
+      {isAuthenticated ? (
+        <div className="flex items-center gap-2 h-full">
+          <button className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-zinc-700 transition-colors">
+            <svg
+              className="w-4 h-4 stroke-zinc-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              strokeWidth="1.8"
             >
-              <CircleUser size={32} className="text-yellow-500" />
-
-              <svg
-                className="w-2.5 h-2.5"
-                viewBox="0 0 10 6"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-1 h-full">
+            <div className="relative h-full flex items-center">
+              <button
+                onClick={() => setOpenMenu(!openMenu)}
+                className="flex items-center gap-1.5 text-sm text-zinc-400 px-3 py-1.5 rounded-md hover:bg-zinc-700 hover:text-white transition-colors"
               >
-                <path d="M1 1l4 4 4-4" />
-              </svg>
-            </button>
+                <CircleUser size={32} className="text-yellow-500" />
 
-            {openMenu && (
-              <div className="absolute -left-17   top-10.5 mt-1.5 bg-zinc-800 border border-zinc-700 rounded-bl-xl min-w-40 overflow-hidden z-50">
-                <Link
-                  to="/User"
-                  className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                <svg
+                  className="w-2.5 h-2.5"
+                  viewBox="0 0 10 6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
                 >
-                  Ver Perfil
-                </Link>
-                <Link
-                  to="/MeusJogos"
-                  className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
-                >
-                  Meus Jogos
-                </Link>
-                <div className="h-px bg-zinc-700 my-1" />
-                {isAuthenticated ? (
+                  <path d="M1 1l4 4 4-4" />
+                </svg>
+              </button>
+
+              {openMenu && (
+                <div className="absolute -right-5 top-full bg-zinc-800 border border-zinc-700 rounded-bl-xl min-w-40 overflow-hidden z-50">
+                  <Link
+                    to="/User"
+                    className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                  >
+                    Ver Perfil
+                  </Link>
+                  <Link
+                    to="/MeusJogos"
+                    className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                  >
+                    Meus Jogos
+                  </Link>
+                  <div className="h-px bg-zinc-700 my-1" />
                   <button
                     onClick={HandleLogout}
                     className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-zinc-700 hover:text-red-300 transition-colors cursor-pointer 4"
                   >
                     Sair
                   </button>
-                ) : (
-                  <Link
-                    className="w-full text-left px-4 py-2.5 text-sm text-white-400 hover:bg-zinc-700 hover:text-white-300 transition-colors"
-                    to="/Auth"
-                  >
-                    Entrar
-                  </Link>
-                )}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <Link
+          className="px-4 py-2 text-sm bg-yellow-500 font-bold rounded-lg hover:scale-105 hover:brightness-125 transition"
+          to="/Auth"
+        >
+          Entrar
+        </Link>
+      )}
     </nav>
   );
 }
