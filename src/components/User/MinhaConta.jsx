@@ -4,13 +4,20 @@ import { UserButton } from "./UserButton";
 import { UserContext } from "../../user/UserContext";
 import { Input } from "../common/Input";
 import { ErrorMessage } from "../common/ErrorMessage";
+import api from "../../api/axios";
+import { Upload } from "lucide-react";
+
+const userURL = "/user";
+const defaultFormData = {
+  email: "",
+  password: "",
+  username: "",
+};
 
 const MinhaConta = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    username: ""
-  });
+  const { setUser } = useContext(UserContext);
+  const [formData, setFormData] = useState(defaultFormData);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [passwordCheck, setPasswordCheck] = useState("");
   function handleChange(e) {
@@ -20,8 +27,26 @@ const MinhaConta = () => {
   }
   async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
     if (passwordCheck !== formData.password) {
       return setError("As senhas não coincidem.");
+    }
+    try {
+      await api.put(userURL, formData);
+      const res = await api.get(`${userURL}/me`);
+      setUser(res.data);
+      setFormData(defaultFormData);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Erro ao conectar com o servidor";
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   }
   const { user } = useContext(UserContext);
@@ -94,11 +119,34 @@ const MinhaConta = () => {
           />
         </div>
       </CardForm>
+      <CardForm title="Carregar Foto">
+        <div className="">
+          <label
+            className="flex justify-center py-6 w-full h-full transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
+            id="drop"
+          >
+            <span className="flex items-center space-x-2">
+              <span className="font-bold text-zinc-500 flex gap-4">
+                <Upload />
+                Escolha uma imagem
+              </span>
+            </span>
+            <input
+              type="file"
+              name="file_upload"
+              className="hidden"
+              accept="image/png,image/jpeg"
+              id="input"
+            />
+          </label>
+        </div>
+      </CardForm>
       <ErrorMessage message={error} />
       <div className="mb-5">
         <UserButton
+          disabled={loading}
           buttonName="Salvar Alterações"
-          className="bg-yellow-700 text-white hover:brightness-110 drop-shadow-xl/50"
+          className="bg-yellow-700 text-white hover:brightness-110 drop-shadow-xl/50 disabled:opacity-50 disabled:cursor-default disabled:active:scale-100"
         />
       </div>
     </form>

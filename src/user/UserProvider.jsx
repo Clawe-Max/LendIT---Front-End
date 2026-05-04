@@ -32,7 +32,10 @@ export const UserProvider = ({ children }) => {
     run();
   }, [isAuthenticated, logout]);
 
-  const value = useMemo(() => ({ user, loadingUser }), [user, loadingUser]);
+  const value = useMemo(
+    () => ({ user, loadingUser, setUser }),
+    [user, loadingUser, setUser],
+  );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -62,7 +62,7 @@ export function Navbar() {
             <div className="relative h-full flex items-center">
               <button
                 onClick={() => setOpenMenu(!openMenu)}
-                className="flex items-center gap-1.5 text-sm text-zinc-400 px-3 py-1.5 rounded-md hover:bg-zinc-700 hover:text-white transition-colors"
+                className="flex items-center gap-1.5 text-sm text-zinc-400 px-3 py-1.5 rounded-md hover:bg-zinc-700 hover:text-white transition-colors cursor-pointer"
               >
                 <CircleUser size={32} className="text-yellow-500" />
 

@@ -11,7 +11,7 @@ const LOGIN_URL = "/user/login";
 const FormLogin = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -64,7 +64,7 @@ const FormLogin = () => {
         />
       </div>
       <div className="flex items-center justify-between mt-4 text-sm">
-        <label className="flex items-center gap-2 text-zinc-400">
+        <label className="flex items-center gap-2 text-zinc-400 cursor-pointer pl-1 pr-3">
           <input type="checkbox" className="accent-yellow-500" />
           Lembrar
         </label>

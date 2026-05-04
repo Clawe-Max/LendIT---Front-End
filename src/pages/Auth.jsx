@@ -8,7 +8,7 @@ const Auth = () => {
   const [changeForm, setChangeForm] = useState(true);
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
-      <Link to="/" className=" text-yellow-500 flex gap-2">
+      <Link to="/" className=" text-yellow-500 flex gap-2 hover:scale-105">
         <Dices className="w-8 h-8" />
         <h1 className="text-3xl font-bold mb-6 tracking-wide"> LendIT</h1>
       </Link>
