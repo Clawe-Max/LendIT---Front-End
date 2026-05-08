@@ -16,10 +16,15 @@ const defaultFormData = {
 
 const MinhaConta = () => {
   const { setUser } = useContext(UserContext);
+  const [file, setFile] = useState(null);
   const [formData, setFormData] = useState(defaultFormData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [passwordCheck, setPasswordCheck] = useState("");
+
+  function handleFileChange(e) {
+    setFile(e.target.files[0]);
+  }
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData((state) => ({ ...state, [name]: value }));
@@ -31,8 +36,16 @@ const MinhaConta = () => {
     if (passwordCheck !== formData.password) {
       return setError("As senhas não coincidem.");
     }
+    const { username, password, email } = formData;
+    const updatedUser = new FormData();
+    if (username.trim()) updatedUser.append("username", username);
+    if (password.trim()) updatedUser.append("password", password);
+    if (email.trim()) updatedUser.append("email", email);
+    if (file) updatedUser.append("image", file);
     try {
-      await api.put(userURL, formData);
+      await api.put(userURL, updatedUser, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       const res = await api.get(`${userURL}/me`);
       setUser(res.data);
       setFormData(defaultFormData);
@@ -133,6 +146,7 @@ const MinhaConta = () => {
             </span>
             <input
               type="file"
+              onChange={handleFileChange}
               name="file_upload"
               className="hidden"
               accept="image/png,image/jpeg"

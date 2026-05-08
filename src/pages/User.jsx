@@ -18,7 +18,7 @@ function User() {
         {user.data.picturePath ? (
           <img
             className="rounded-full object-cover size-52 shadow-xl/70"
-            src={user.data.picturePath}
+            src={`http://localhost:3000/${user.data.picturePath}`}
             alt="UPLOAD"
           />
         ) : (
