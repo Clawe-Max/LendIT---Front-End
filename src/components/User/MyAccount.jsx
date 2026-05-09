@@ -11,7 +11,7 @@ const userURL = "/user";
 const defaultFormData = {
   email: "",
   password: "",
-  username: ""
+  username: "",
 };
 
 const MyAccount = () => {
@@ -46,20 +46,18 @@ const MyAccount = () => {
     if (file) updatedUser.append("image", file);
     try {
       await api.put(userURL, updatedUser, {
-        headers: { "Content-Type": "multipart/form-data" }
+        headers: { "Content-Type": "multipart/form-data" },
       });
       const res = await api.get(`${userURL}/me`);
       setUser(res.data);
       setFormData(defaultFormData);
+      setPasswordCheck("");
+      setFile(null);
 
       window.scrollTo({
         top: 0,
-        behavior: "smooth"
+        behavior: "smooth",
       });
-
-      setFormData(defaultFormData);
-      setPasswordCheck("");
-      setFile(null);
     } catch (err) {
       const message =
         err.response?.data?.message ||
