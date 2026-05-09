@@ -2,10 +2,12 @@ import { useState } from "react";
 import api from "../../api/axios";
 import { ErrorMessage } from "../common/ErrorMessage";
 import { Input } from "../common/Input";
+import { useTabsContext } from "../common/tabs";
 
 const REGISTER_URL = "/user";
 
-const FormRegister = ({ setForm }) => {
+const FormRegister = () => {
+  const { setActiveTab } = useTabsContext();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -18,10 +20,11 @@ const FormRegister = ({ setForm }) => {
     try {
       setLoading(true);
       await api.post(REGISTER_URL, formData);
-      setForm(true);
+      setActiveTab("login");
     } catch (err) {
       const message =
-        err.response?.data?.message || "Erro ao conectar com o servidor";
+        err.response?.data?.message ||
+        "Connection timed out. Please try again.";
       setError(message);
     } finally {
       setLoading(false);

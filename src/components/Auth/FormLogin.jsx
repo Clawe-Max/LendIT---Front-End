@@ -11,7 +11,7 @@ const LOGIN_URL = "/user/login";
 const FormLogin = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -27,7 +27,8 @@ const FormLogin = () => {
       navigate("/");
     } catch (err) {
       const message =
-        err.response?.data?.message || "Erro ao conectar com o servidor";
+        err.response?.data?.message ||
+        "Connection timed out. Please try again.";
       setError(message);
     } finally {
       setLoading(false);

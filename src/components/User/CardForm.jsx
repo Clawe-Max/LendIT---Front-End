@@ -1,8 +1,15 @@
-const CardForm = ({ title, children }) => {
+import { cn } from "../../lib/utils";
+
+const CardForm = ({ title, children, className }) => {
   return (
     <div className="flex flex-col gap-8 w-1/3 text-white">
       <h1 className="text-4xl">{title}</h1>
-      <div className="bg-yellow-800 p-8 rounded-2xl shadow-2xl flex flex-col gap-2 justify-start">
+      <div
+        className={cn(
+          "bg-yellow-800 p-8 rounded-2xl shadow-2xl flex flex-col gap-2 justify-start",
+          className
+        )}
+      >
         {children}
       </div>
     </div>

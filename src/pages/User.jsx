@@ -1,9 +1,15 @@
 import { CircleUser, Mail, UserIcon } from "lucide-react";
-import { MinhaConta } from "../components/User/MinhaConta";
+import { MyAccount } from "../components/User/MyAccount";
 import { UserButton } from "../components/User/UserButton";
 import { DeleteButton } from "../components/User/DeleteButton";
 import { useContext } from "react";
 import { UserContext } from "../user/UserContext";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from "../components/common/tabs";
 
 function User() {
   const { user, loadingUser } = useContext(UserContext);
@@ -44,16 +50,61 @@ function User() {
           </h2>
         </div>
       </div>
-      <div className="flex gap-8">
-        <UserButton buttonName="Meus Jogos" />
-        <UserButton buttonName="Meus Pedidos" />
-        <UserButton
-          className="bg-yellow-800 text-white"
-          buttonName="Minha Conta"
-        />
-        <DeleteButton />
-      </div>
-      <MinhaConta />
+      <Tabs
+        className="w-full flex flex-col items-center gap-5"
+        defaultValue="account"
+      >
+        <div className="flex gap-8 items-center">
+          <TabsList className="flex gap-8">
+            <TabsTrigger value="games" asChild>
+              <UserButton
+                className="
+                  data-[state=active]:bg-yellow-800
+                  data-[state=active]:text-white
+                "
+              >
+                Meus Jogos
+              </UserButton>
+            </TabsTrigger>
+
+            <TabsTrigger value="orders" asChild>
+              <UserButton
+                className="
+                  data-[state=active]:bg-yellow-800
+                  data-[state=active]:text-white
+                "
+              >
+                Meus Pedidos
+              </UserButton>
+            </TabsTrigger>
+
+            <TabsTrigger value="account" asChild>
+              <UserButton
+                className="
+                  data-[state=active]:bg-yellow-800
+                  data-[state=active]:text-white
+                "
+              >
+                Minha Conta
+              </UserButton>
+            </TabsTrigger>
+          </TabsList>
+
+          <DeleteButton />
+        </div>
+
+        <TabsContent className="w-full flex justify-center" value="games">
+          <div className="text-white">Jogos do usuário</div>
+        </TabsContent>
+
+        <TabsContent className="w-full flex justify-center" value="orders">
+          <div className="text-white">Pedidos do usuário</div>
+        </TabsContent>
+
+        <TabsContent className="w-full flex justify-center" value="account">
+          <MyAccount />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

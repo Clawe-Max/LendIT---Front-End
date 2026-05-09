@@ -1,26 +1,28 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { CardForm } from "./CardForm";
 import { UserButton } from "./UserButton";
 import { UserContext } from "../../user/UserContext";
 import { Input } from "../common/Input";
 import { ErrorMessage } from "../common/ErrorMessage";
 import api from "../../api/axios";
-import { Upload } from "lucide-react";
+import { Delete, Image, Upload, X } from "lucide-react";
 
 const userURL = "/user";
 const defaultFormData = {
   email: "",
   password: "",
-  username: "",
+  username: ""
 };
 
-const MinhaConta = () => {
-  const { setUser } = useContext(UserContext);
+const MyAccount = () => {
+  const { user, setUser } = useContext(UserContext);
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState(defaultFormData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [passwordCheck, setPasswordCheck] = useState("");
+
+  const inputRef = useRef(null);
 
   function handleFileChange(e) {
     setFile(e.target.files[0]);
@@ -32,10 +34,10 @@ const MinhaConta = () => {
   }
   async function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
     if (passwordCheck !== formData.password) {
-      return setError("As senhas não coincidem.");
+      return setError("Password confirmation does not match.");
     }
+    setLoading(true);
     const { username, password, email } = formData;
     const updatedUser = new FormData();
     if (username.trim()) updatedUser.append("username", username);
@@ -44,7 +46,7 @@ const MinhaConta = () => {
     if (file) updatedUser.append("image", file);
     try {
       await api.put(userURL, updatedUser, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" }
       });
       const res = await api.get(`${userURL}/me`);
       setUser(res.data);
@@ -52,17 +54,21 @@ const MinhaConta = () => {
 
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: "smooth"
       });
+
+      setFormData(defaultFormData);
+      setPasswordCheck("");
+      setFile(null);
     } catch (err) {
       const message =
-        err.response?.data?.message || "Erro ao conectar com o servidor";
+        err.response?.data?.message ||
+        "Connection timed out. Please try again.";
       setError(message);
     } finally {
       setLoading(false);
     }
   }
-  const { user } = useContext(UserContext);
   return (
     <form
       onSubmit={handleSubmit}
@@ -132,7 +138,7 @@ const MinhaConta = () => {
           />
         </div>
       </CardForm>
-      <CardForm title="Carregar Foto">
+      <CardForm className="relative" title="Carregar Foto">
         <div className="">
           <label
             className="flex justify-center py-6 w-full h-full transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
@@ -145,6 +151,7 @@ const MinhaConta = () => {
               </span>
             </span>
             <input
+              ref={inputRef}
               type="file"
               onChange={handleFileChange}
               name="file_upload"
@@ -154,17 +161,36 @@ const MinhaConta = () => {
             />
           </label>
         </div>
+        {file && (
+          <span className="absolute flex items-center gap-1  bottom-2 left-8 text-sm">
+            <Image />
+            {file.name}
+            <button
+              className="flex items-center justify-center cursor-pointer pt-1 hover:text-red-400 transition"
+              onClick={() => {
+                setFile(null);
+
+                if (inputRef.current) {
+                  inputRef.current.value = "";
+                }
+              }}
+            >
+              <Delete size={24} />
+            </button>
+          </span>
+        )}
       </CardForm>
       <ErrorMessage message={error} />
       <div className="mb-5">
         <UserButton
           disabled={loading}
-          buttonName="Salvar Alterações"
           className="bg-yellow-700 text-white hover:brightness-110 drop-shadow-xl/50 disabled:opacity-50 disabled:cursor-default disabled:active:scale-100"
-        />
+        >
+          Salvar Alterações
+        </UserButton>
       </div>
     </form>
   );
 };
 
-export { MinhaConta };
+export { MyAccount };
