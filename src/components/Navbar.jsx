@@ -91,6 +91,12 @@ export function Navbar() {
                   >
                     Meus Jogos
                   </Link>
+                  <Link
+                    to="/chat"
+                    className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                  >
+                    Chat
+                  </Link>
                   <div className="h-px bg-zinc-700 my-1" />
                   <button
                     onClick={HandleLogout}
