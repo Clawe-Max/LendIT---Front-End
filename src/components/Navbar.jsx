@@ -21,7 +21,7 @@ export function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-zinc-800 flex items-center justify-between px-5 h-13">
+    <nav className="fixed top-0 left-0 w-full bg-linear-to-b from-zinc-800 to-zinc-900 flex items-center justify-between px-5 h-13">
       <Link
         to="/"
         className="text-yellow-500 font-semibold tracking-widest cursor-pointer hover:scale-105 flex gap-2 items-center"
@@ -78,7 +78,7 @@ export function Navbar() {
               </button>
 
               {openMenu && (
-                <div className="absolute -right-5 top-full bg-zinc-800 border border-zinc-700 rounded-bl-xl min-w-40 overflow-hidden z-50">
+                <div className="absolute -right-5 top-full bg-zinc-900 border border-zinc-800 rounded-bl-xl min-w-40 overflow-hidden z-50">
                   <Link
                     to="/User"
                     className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
@@ -97,7 +97,7 @@ export function Navbar() {
                   >
                     Chat
                   </Link>
-                  <div className="h-px bg-zinc-700 my-1" />
+                  <div className="h-px bg-zinc-800 my-1" />
                   <button
                     onClick={HandleLogout}
                     className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-zinc-700 hover:text-red-300 transition-colors cursor-pointer 4"

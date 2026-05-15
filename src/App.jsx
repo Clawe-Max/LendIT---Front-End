@@ -16,16 +16,16 @@ function App() {
       <UserProvider>
         <ChatContextProvider>
           <div className="min-h-screen bg-[url('./assets/Plano_de_fundo_do_projeto.png')] bg-no-repeat bg-cover bg-fixed">
-            <div className="min-h-screen bg-black/75">
+            <div className="min-h-screen bg-zinc-900/95">
               <Routes>
                 <Route element={<Auth />} path="/Auth" />
                 <Route path="/" element={<Content />}>
                   <Route index element={<Home />} />
                   <Route element={<ProtectedRoute />}>
                     <Route path="user" element={<User />}></Route>
+                    <Route path="chat" element={<Chat />}></Route>
                   </Route>
                 </Route>
-                  <Route path="chat" element={<Chat />}></Route>
               </Routes>
             </div>
           </div>

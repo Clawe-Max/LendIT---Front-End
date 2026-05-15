@@ -49,8 +49,8 @@ function User() {
   }
 
   return (
-    <div className="min-h-full flex flex-col items-center gap-5 pt-[5vh]">
-      <div className="flex flex-col gap-5 items-center">
+    <div className="min-h-[calc(100vh-52px)] flex flex-col items-center gap-5 pt-[5vh] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
+      <div className="flex flex-col gap-5 items-center ">
         {user.data.picturePath ? (
           <img
             className="rounded-full object-cover size-52 shadow-xl/70"
@@ -63,8 +63,13 @@ function User() {
             color="#894b00"
           />
         )}
-        <h1 className="text-5xl text-amber-50">Olá, {user.data.Username} </h1>
-        <div className="flex row-auto bg-yellow-900 shadow-xl/30 text-amber-50 gap-5 p-1 px-3 rounded-xl">
+        <h1 className="text-4xl text-amber-50">
+          Olá,{" "}
+          <span className="text-yellow-500 text-5xl">
+            {user.data.Username}
+          </span>{" "}
+        </h1>
+        <div className="flex row-auto bg-zinc-800 shadow-xl/30 text-yellow-500 gap-5 p-1 px-3 rounded-xl">
           <h2 className="flex items-center row-auto gap-1">
             <UserIcon />
             {user.data.Username}
@@ -84,7 +89,7 @@ function User() {
             <TabsTrigger value="games" asChild>
               <UserButton
                 className="
-                  data-[state=active]:bg-yellow-800
+                  data-[state=active]:bg-zinc-700
                   data-[state=active]:text-white
                 "
               >
@@ -95,7 +100,7 @@ function User() {
             <TabsTrigger value="orders" asChild>
               <UserButton
                 className="
-                  data-[state=active]:bg-yellow-800
+                  data-[state=active]:bg-zinc-700
                   data-[state=active]:text-white
                 "
               >
@@ -106,7 +111,7 @@ function User() {
             <TabsTrigger value="account" asChild>
               <UserButton
                 className="
-                  data-[state=active]:bg-yellow-800
+                  data-[state=active]:bg-zinc-700
                   data-[state=active]:text-white
                 "
               >
@@ -121,7 +126,7 @@ function User() {
             onClose={() => setIsOpen(false)}
             title="Confirmar exclusão"
           >
-            <p className="text-zinc-700 mb-4">
+            <p className="text-white mb-4">
               Tem certeza que deseja deletar sua conta?
             </p>
 
@@ -129,7 +134,7 @@ function User() {
               <ErrorMessage message={error} />
               <button
                 onClick={() => setIsOpen(false)}
-                className="bg-zinc-300 px-4 py-2 rounded cursor-pointer"
+                className="bg-zinc-700 px-4 py-2 rounded cursor-pointer hover:bg-zinc-500"
               >
                 Cancelar
               </button>
@@ -137,7 +142,7 @@ function User() {
               <button
                 disabled={loading}
                 onClick={handleDeleteAccount}
-                className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-default"
+                className="bg-red-600 text-white px-4 py-2 rounded cursor-pointer disabled:opacity-50 disabled:cursor-default hover:bg-red-800"
               >
                 Confirmar
               </button>

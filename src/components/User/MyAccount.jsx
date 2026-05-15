@@ -77,7 +77,7 @@ const MyAccount = () => {
         <h2 className="text-3xl">Informações públicas</h2>
         <p>Estas informações serão exibidas publicamente.</p>
         <div className="flex flex-col gap-1 pt-3">
-          <label htmlFor="username" className="text-xs">
+          <label htmlFor="username" className="text-xs ">
             Nome de Exibição
           </label>
           <Input
@@ -182,7 +182,7 @@ const MyAccount = () => {
       <div className="mb-5">
         <UserButton
           disabled={loading}
-          className="bg-yellow-700 text-white hover:brightness-110 drop-shadow-xl/50 disabled:opacity-50 disabled:cursor-default disabled:active:scale-100"
+          className="bg-zinc-700 text-white hover:brightness-110 drop-shadow-xl/50 disabled:opacity-50 disabled:cursor-default disabled:active:scale-100"
         >
           Salvar Alterações
         </UserButton>

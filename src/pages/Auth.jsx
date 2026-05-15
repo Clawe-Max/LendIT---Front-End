@@ -7,7 +7,7 @@ import {
   Tabs,
   TabsContent,
   TabsList,
-  TabsTrigger
+  TabsTrigger,
 } from "../components/common/tabs/Tabs";
 
 const Auth = () => {
@@ -17,9 +17,9 @@ const Auth = () => {
         <Dices className="w-8 h-8" />
         <h1 className="text-3xl font-bold mb-6 tracking-wide"> LendIT</h1>
       </Link>
-      <section className="bg-neutral-600 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md border border-yellow-700/30">
+      <section className="bg-neutral-800 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-full max-w-md border border-yellow-700/30">
         <Tabs defaultValue="login">
-          <TabsList className="flex mb-6 bg-zinc-800 rounded-lg p-1">
+          <TabsList className="flex mb-6 bg-zinc-900 rounded-lg p-1">
             <TabsTrigger
               value="login"
               className="

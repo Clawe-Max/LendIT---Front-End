@@ -11,7 +11,7 @@ const LOGIN_URL = "/user/login";
 const FormLogin = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -50,7 +50,7 @@ const FormLogin = () => {
           placeholder="*E-mail"
           value={formData.email}
           className={
-            "rounded-lg bg-zinc-800 text-white placeholder-zinc-500 focus:ring-yellow-500"
+            "rounded-lg bg-zinc-900 text-white placeholder-zinc-500 focus:ring-yellow-500"
           }
         />
         <Input
@@ -60,7 +60,7 @@ const FormLogin = () => {
           placeholder="*Senha"
           value={formData.password}
           className={
-            "rounded-lg bg-zinc-800 text-white placeholder-zinc-500 focus:ring-yellow-500"
+            "rounded-lg bg-zinc-900 text-white placeholder-zinc-500 focus:ring-yellow-500"
           }
         />
       </div>

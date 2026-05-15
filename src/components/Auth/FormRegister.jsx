@@ -11,7 +11,7 @@ const FormRegister = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -47,7 +47,7 @@ const FormRegister = () => {
           value={formData.username}
           onChange={handleChange}
           className={
-            "rounded-lg bg-zinc-800 text-white placeholder-zinc-500 focus:ring-yellow-500"
+            "rounded-lg bg-zinc-900 text-white placeholder-zinc-500 focus:ring-yellow-500"
           }
         />
         <Input
@@ -57,7 +57,7 @@ const FormRegister = () => {
           value={formData.email}
           onChange={handleChange}
           className={
-            "rounded-lg bg-zinc-800 text-white placeholder-zinc-500 focus:ring-yellow-500"
+            "rounded-lg bg-zinc-900 text-white placeholder-zinc-500 focus:ring-yellow-500"
           }
         />
         <Input
@@ -67,28 +67,10 @@ const FormRegister = () => {
           value={formData.password}
           onChange={handleChange}
           className={
-            "rounded-lg bg-zinc-800 text-white placeholder-zinc-500 focus:ring-yellow-500"
+            "rounded-lg bg-zinc-900 text-white placeholder-zinc-500 focus:ring-yellow-500"
           }
         />
       </div>
-      {/* <ul className="mt-4 text-sm">
-        <li>
-          <h1>Siga essas dicas:</h1>
-        </li>
-        <li>Mínimo 6 caracteres</li>
-        <li>
-          <p>
-            Tente uma combinação com letras maiúsculas e minúsculas, números e
-            caracteres especiais
-          </p>
-        </li>
-        <li>
-          <p>
-            Evite sequências como "12345" ou "abc" Evite informações pessoais e
-            palavras comuns
-          </p>
-        </li>
-      </ul> */}
       <ErrorMessage className="pt-2" message={error} />
       <button
         disabled={loading}
@@ -96,10 +78,17 @@ const FormRegister = () => {
       >
         Criar
       </button>
-      <p>
-        Ao se cadastrar, você aceita os Termos de Uso e a Política de
-        Privacidade
-      </p>
+      <span className="text-zinc-500">
+        Ao se cadastrar, você aceita os{" "}
+        <span className="text-yellow-500 hover:cursor-pointer hover:underline">
+          Termos de Uso
+        </span>{" "}
+        e a
+        <span className="text-yellow-500 hover:cursor-pointer hover:underline">
+          {" "}
+          Política de Privacidade
+        </span>
+      </span>
     </form>
   );
 };

@@ -5,7 +5,7 @@ const Content = () => {
   return (
     <>
       <Navbar />
-      <div className="pt-14">
+      <div className="pt-13">
         <Outlet />
       </div>
     </>
