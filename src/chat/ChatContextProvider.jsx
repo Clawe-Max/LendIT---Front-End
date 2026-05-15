@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import api from "@/api/axios";
 import { ChatContext } from "./ChatContext";
 import { UserContext } from "../user/UserContext";
+import { io } from "socket.io-client"
 
 export const ChatContextProvider = ({children}) => {
 
@@ -16,6 +17,64 @@ export const ChatContextProvider = ({children}) => {
     const [currentChat, setCurrentChat] = useState(null)
     const [sendTextMessageError, setSendTextMessageError] = useState(null)
     const [newMessage, setNewMessage] = useState(null)
+    const [socket, setSocket] = useState(null)
+    const [onlineUsers, setOnlineUsers] = useState([])
+
+    console.log("onlineUsers", onlineUsers)
+
+    useEffect(() => {
+        const createSocket = async() => {
+
+            const newSocket = io("http://localhost:3000")
+            setSocket(newSocket)
+
+            return () => {
+                newSocket.disconnect
+            }
+        }
+
+        createSocket()
+        
+    }, [user])
+
+    useEffect(() => {
+        if(user === null) return
+        socket.emit("addNewUser", user?.data.Id)
+        socket.on("getOnlineUsers", (res) => {
+            setOnlineUsers(res)
+        })
+
+        return () => {
+            socket.off("getOnlineUsers")
+        }
+    }, [socket])
+
+    // envia a mensagem
+    useEffect(() => {
+        if(user === null) return
+
+        const recipientId = currentChat?.user1Id !== user?.data.Id ? currentChat?.user1Id: currentChat?.user2Id
+
+        socket.emit("sendMessage", {...newMessage, recipientId})
+
+    }, [newMessage])    
+
+    // recebe a mensagem
+
+    useEffect(() => {
+        if(user === null) return
+
+        socket.on("getMessage", res => {
+            if(currentChat?.id !== res.chatId) return
+
+            setMessages((prev) => [...prev, res])
+        })
+
+        return () => {
+            socket.off("getMessage")
+        }
+
+    }, [socket, currentChat])        
 
     useEffect(() => {
 
@@ -128,7 +187,8 @@ export const ChatContextProvider = ({children}) => {
         messages,
         isMessagesLoading,
         messagesError,
-        sendTextMessage
+        sendTextMessage,
+        onlineUsers
     }}>
         {children}
     </ChatContext.Provider>
