@@ -6,24 +6,30 @@ import { UserProvider } from "./user/UserProvider";
 import { Content } from "./components/Content";
 import { User } from "./pages/User";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Chat } from "./pages/Chat";
+import { ChatContextProvider } from "./chat/ChatContextProvider";
+import { UserContext } from "./user/UserContext";
 
 function App() {
   return (
     <AuthProvider>
       <UserProvider>
-        <div className="min-h-screen bg-[url('./assets/Plano_de_fundo_do_projeto.png')] bg-no-repeat bg-cover bg-fixed">
-          <div className="min-h-screen bg-black/75">
-            <Routes>
-              <Route element={<Auth />} path="/Auth" />
-              <Route path="/" element={<Content />}>
-                <Route index element={<Home />} />
-                <Route element={<ProtectedRoute />}>
-                  <Route path="user" element={<User />}></Route>
+        <ChatContextProvider>
+          <div className="min-h-screen bg-[url('./assets/Plano_de_fundo_do_projeto.png')] bg-no-repeat bg-cover bg-fixed">
+            <div className="min-h-screen bg-black/75">
+              <Routes>
+                <Route element={<Auth />} path="/Auth" />
+                <Route path="/" element={<Content />}>
+                  <Route index element={<Home />} />
+                  <Route element={<ProtectedRoute />}>
+                    <Route path="user" element={<User />}></Route>
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
+                  <Route path="chat" element={<Chat />}></Route>
+              </Routes>
+            </div>
           </div>
-        </div>
+        </ChatContextProvider>
       </UserProvider>
     </AuthProvider>
   );
