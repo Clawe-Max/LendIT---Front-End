@@ -86,7 +86,7 @@ export function Navbar() {
                     Ver Perfil
                   </Link>
                   <Link
-                    to="/MeusJogos"
+                    to="/mygames"
                     className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
                   >
                     Meus Jogos

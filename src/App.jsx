@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Chat } from "./pages/Chat";
 import { ChatContextProvider } from "./chat/ChatContextProvider";
 import { UserContext } from "./user/UserContext";
+import { MyGames } from "./pages/MyGames";
 
 function App() {
   return (
@@ -22,8 +23,9 @@ function App() {
                 <Route path="/" element={<Content />}>
                   <Route index element={<Home />} />
                   <Route element={<ProtectedRoute />}>
-                    <Route path="user" element={<User />}></Route>
-                    <Route path="chat" element={<Chat />}></Route>
+                    <Route path="user" element={<User />} />
+                    <Route path="chat" element={<Chat />} />
+                    <Route path="mygames" element={<MyGames />} />
                   </Route>
                 </Route>
               </Routes>

@@ -1,4 +1,5 @@
 import { DicesIcon, Star, Clock, TrendingUp } from "lucide-react";
+import { GameCard } from "../components/common/GameCard";
 
 // Jogos mockados — substitua depois por api.get(...)
 const JOGOS_DESTAQUE = [
@@ -70,53 +71,9 @@ const CATEGORIAS = [
   { nome: "Família", emoji: "👨‍👩‍👧", quantidade: 15 },
   { nome: "Blefe", emoji: "🎭", quantidade: 6 },
 ];
-
-function StarRating({ nota }) {
-  return (
-    <div className="flex items-center gap-1">
-      <Star size={12} className="fill-yellow-500 text-yellow-500" />
-      <span className="text-xs text-yellow-500 font-semibold">{nota}</span>
-    </div>
-  );
-}
-
-function CardJogo({ jogo }) {
-  return (
-    <div className="group relative bg-zinc-800 rounded-xl overflow-hidden border border-zinc-700 hover:border-yellow-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-yellow-500/10 cursor-pointer">
-      {/* Área da imagem / cor */}
-      <div className={`h-32 bg-gradient-to-br ${jogo.cor} flex items-center justify-center relative`}>
-        <span className="text-5xl">{jogo.emoji}</span>
-        <div className="absolute top-2 right-2">
-          <StarRating nota={jogo.avaliacao} />
-        </div>
-      </div>
-
-      {/* Infos */}
-      <div className="p-3 flex flex-col gap-1">
-        <span className="text-xs text-yellow-500 font-medium tracking-wide uppercase">
-          {jogo.categoria}
-        </span>
-        <h3 className="text-white font-semibold text-sm leading-tight">{jogo.nome}</h3>
-        <div className="flex items-center gap-3 mt-1">
-          <span className="flex items-center gap-1 text-zinc-400 text-xs">
-            👥 {jogo.jogadores}
-          </span>
-          <span className="flex items-center gap-1 text-zinc-400 text-xs">
-            <Clock size={10} /> {jogo.duracao}
-          </span>
-        </div>
-        <button className="mt-2 w-full text-xs bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-1.5 rounded-lg transition-colors">
-          Alugar
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function Home() {
   return (
-    <div className="min-h-screen bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
-
+    <div className="min-h-[calc(100vh-52px)] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
       {/* Boas-vindas */}
       <div className="mb-10">
         <div className="flex items-center gap-2 mb-1">
@@ -130,7 +87,8 @@ function Home() {
           <span className="text-yellow-500">começa aqui.</span>
         </h1>
         <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-          Alugue jogos de tabuleiro por um preço justo, jogue com quem você gosta e devolva quando terminar. Simples assim.
+          Alugue jogos de tabuleiro por um preço justo, jogue com quem você
+          gosta e devolva quando terminar. Simples assim.
         </p>
       </div>
 
@@ -176,7 +134,7 @@ function Home() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {JOGOS_DESTAQUE.map((jogo) => (
-            <CardJogo key={jogo.id} jogo={jogo} />
+            <GameCard key={jogo.id} jogo={jogo} />
           ))}
         </div>
       </div>
