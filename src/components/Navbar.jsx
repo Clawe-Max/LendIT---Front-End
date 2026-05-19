@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import api from "../api/axios";
 import { CircleUser, DicesIcon } from "lucide-react";
+import { ChatContext } from "../chat/ChatContext";
 
 const LOGOUT_URL = "/user/logout";
 
 export function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
   const { isAuthenticated, logout } = useAuth();
+  const { clearChats } = useContext(ChatContext);
 
   async function HandleLogout() {
     try {
       await api.post(LOGOUT_URL);
+      logout();
+      clearChats();
     } catch (err) {
       console.log(err);
-    } finally {
-      logout();
     }
   }
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-linear-to-b from-zinc-800 to-zinc-900 flex items-center justify-between px-5 h-13">
+    <nav className="fixed z-50 top-0 left-0 w-full bg-linear-to-b from-zinc-800 to-zinc-900 flex items-center justify-between px-5 h-14">
       <Link
         to="/"
         className="text-yellow-500 font-semibold tracking-widest cursor-pointer hover:scale-105 flex gap-2 items-center"
@@ -62,12 +64,12 @@ export function Navbar() {
             <div className="relative h-full flex items-center">
               <button
                 onClick={() => setOpenMenu(!openMenu)}
-                className="flex items-center gap-1.5 text-sm text-zinc-400 px-3 py-1.5 rounded-md hover:bg-zinc-700 hover:text-white transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-sm text-zinc-400 px-3 py-1 rounded-md hover:bg-zinc-700 hover:text-white transition-colors cursor-pointer"
               >
-                <CircleUser size={32} className="text-yellow-500" />
+                <CircleUser size={28} className="text-yellow-500" />
 
                 <svg
-                  className="w-2.5 h-2.5"
+                  className="w-2 h-2"
                   viewBox="0 0 10 6"
                   fill="none"
                   stroke="currentColor"
