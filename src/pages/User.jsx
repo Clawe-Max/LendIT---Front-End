@@ -8,7 +8,7 @@ import {
   Tabs,
   TabsContent,
   TabsList,
-  TabsTrigger,
+  TabsTrigger
 } from "../components/common/tabs";
 import Modal from "../components/common/Modal";
 import { useState } from "react";
@@ -19,6 +19,7 @@ import { ErrorMessage } from "../components/common/ErrorMessage";
 const DELETE_URL = "/user/me";
 
 function User() {
+  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { user, loadingUser } = useContext(UserContext);
@@ -28,8 +29,6 @@ function User() {
     return <p>CARREGANDO</p>;
   }
   console.log(user);
-
-  const [isOpen, setIsOpen] = useState(false);
 
   async function handleDeleteAccount() {
     try {
@@ -49,7 +48,7 @@ function User() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-52px)] flex flex-col items-center gap-5 pt-[5vh] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
+    <div className="min-h-[calc(100vh-56px)] flex flex-col items-center gap-5 pt-[5vh] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
       <div className="flex flex-col gap-5 items-center ">
         {user.data.picturePath ? (
           <img

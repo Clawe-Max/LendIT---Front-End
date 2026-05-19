@@ -1,182 +1,217 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import api from "@/api/axios";
 import { ChatContext } from "./ChatContext";
 import { UserContext } from "../user/UserContext";
-import { io } from "socket.io-client"
+import { io } from "socket.io-client";
 
-export const ChatContextProvider = ({children}) => {
+export const ChatContextProvider = ({ children }) => {
+  const { user } = useContext(UserContext);
+  const [userChats, setUserChats] = useState([]);
+  const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
+  const [userChatsError, setUserChatsError] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
+  const [messagesError, setMessagesError] = useState(null);
+  const [potentialChats, setPotentialChats] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [sendTextMessageError, setSendTextMessageError] = useState(null);
+  const [newMessage, setNewMessage] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
-    const { user } = useContext(UserContext);
-    const [userChats, setUserChats] = useState(null);
-    const [isUserChatsLoading, setIsUserChatsLoading] = useState(false);
-    const [userChatsError, setUserChatsError] = useState(null);
-    const [messages, setMessages] = useState(null);
-    const [isMessagesLoading, setIsMessagesLoading] = useState(false);
-    const [messagesError, setMessagesError] = useState(null);
-    const [potentialChats, setPotentialChats] = useState([])
-    const [currentChat, setCurrentChat] = useState(null)
-    const [sendTextMessageError, setSendTextMessageError] = useState(null)
-    const [newMessage, setNewMessage] = useState(null)
-    const [socket, setSocket] = useState(null)
-    const [onlineUsers, setOnlineUsers] = useState([])
+  console.log("onlineUsers", onlineUsers);
+  const socketRef = useRef(null);
+  useEffect(() => {
+    socketRef.current = io("http://localhost:3000");
 
-    console.log("onlineUsers", onlineUsers)
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, [user]);
 
-    useEffect(() => {
-        const createSocket = async() => {
+  useEffect(() => {
+    if (!socketRef.current || !user) return;
+    socketRef.current.emit("addNewUser", user?.data?.Id);
+    socketRef.current.on("getOnlineUsers", (res) => {
+      setOnlineUsers(res);
+    });
 
-            const newSocket = io("http://localhost:3000")
-            setSocket(newSocket)
+    return () => {
+      socketRef.current.off("getOnlineUsers");
+    };
+  }, [user]);
 
-            return () => {
-                newSocket.disconnect
-            }
+  // envia a mensagem
+  useEffect(() => {
+    if (!newMessage || !socketRef.current || !user || !currentChat) return;
+
+    const recipientId =
+      currentChat?.user1Id !== user?.data.Id
+        ? currentChat?.user1Id
+        : currentChat?.user2Id;
+
+    socketRef.current.emit("sendMessage", { ...newMessage, recipientId });
+  }, [newMessage, currentChat, user]);
+
+  // recebe a mensagem
+
+  useEffect(() => {
+    if (!user || !socketRef.current) return;
+
+    const handleMessage = (res) => {
+      if (currentChat?.id !== res.chatId) return;
+
+      setMessages((prev) => [...prev, res]);
+    };
+    socketRef.current.on("getMessage", handleMessage);
+
+    return () => {
+      socketRef.current.off("getMessage", handleMessage);
+    };
+  }, [currentChat, user]);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const response = await api.get("/user");
+        const existingUsers = new Set(
+          userChats?.map((chat) =>
+            chat.user1Id === user.data.Id ? chat.user2Id : chat.user1Id
+          )
+        );
+
+        const pChats = response.data.data.filter((u) => {
+          return u.id !== user.data.Id && !existingUsers.has(u.id);
+        });
+
+        setPotentialChats(pChats);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getUsers();
+  }, [userChats, user]);
+
+  useEffect(() => {
+    if (!user?.data?.Id) return;
+
+    const getUserChats = async () => {
+      try {
+        setIsUserChatsLoading(true);
+        setUserChatsError(null);
+
+        const response = await api.get(`/chat/${user.data.Id}`);
+
+        if (!Array.isArray(response.data)) {
+          throw new Error("Invalid response");
         }
 
-        createSocket()
-        
-    }, [user])
+        setUserChats(response.data);
+      } catch (error) {
+        console.log(error);
+        setUserChatsError(error);
+      } finally {
+        setIsUserChatsLoading(false);
+      }
+    };
 
-    useEffect(() => {
-        if(user === null) return
-        socket.emit("addNewUser", user?.data.Id)
-        socket.on("getOnlineUsers", (res) => {
-            setOnlineUsers(res)
-        })
+    getUserChats();
+  }, [user?.data?.Id]);
 
-        return () => {
-            socket.off("getOnlineUsers")
-        }
-    }, [socket])
+  useEffect(() => {
+    if (!currentChat?.id) return;
 
-    // envia a mensagem
-    useEffect(() => {
-        if(user === null) return
+    const getMessages = async () => {
+      try {
+        setIsMessagesLoading(true);
+        setMessagesError(null);
 
-        const recipientId = currentChat?.user1Id !== user?.data.Id ? currentChat?.user1Id: currentChat?.user2Id
+        const response = await api.get(`/messages/${currentChat.id}`);
 
-        socket.emit("sendMessage", {...newMessage, recipientId})
-
-    }, [newMessage])    
-
-    // recebe a mensagem
-
-    useEffect(() => {
-        if(user === null) return
-
-        socket.on("getMessage", res => {
-            if(currentChat?.id !== res.chatId) return
-
-            setMessages((prev) => [...prev, res])
-        })
-
-        return () => {
-            socket.off("getMessage")
+        if (!Array.isArray(response.data)) {
+          throw new Error("Invalid response");
         }
 
-    }, [socket, currentChat])        
+        setMessages(response.data);
+      } catch (error) {
+        console.log(error);
+        setMessagesError(error);
+      } finally {
+        setIsMessagesLoading(false);
+      }
+    };
 
-    useEffect(() => {
+    getMessages();
+  }, [currentChat?.id]);
 
-        const getUsers = async() => {
-            const response = await api.get('/user')
+  const sendTextMessage = useCallback(
+    async (textMessage, sender, currentChatId, setTextMessage) => {
+      if (!textMessage.trim()) return;
 
-            if(response.error)
-                return console.log("Error fetching users", response)
+      try {
+        const response = await api.post("/messages", {
+          senderId: sender.Id,
+          chatId: currentChatId,
+          text: textMessage
+        });
 
-            const pChats = response.data.data.filter((u) => {
-                let isChatCreated = false
+        setMessages((prev) => {
+          const exists = prev.some((m) => m.id === response.data.id);
 
-                if(user?.data.Id === u.id) return false
+          if (exists) return prev;
 
-                if(userChats) {
-                    isChatCreated = userChats?.some((chat) => {
-                        return chat.user1Id === u.id || chat.user2Id === u.id
-                    })
-                }
-                return !isChatCreated
-            })
+          return [...prev, response.data];
+        });
 
-            setPotentialChats(pChats)
-        }
+        setNewMessage(response.data);
 
-        getUsers()
-    }, [userChats])
+        setTextMessage("");
+      } catch (error) {
+        console.log(error);
+        setSendTextMessageError(error);
+      }
+    },
+    []
+  );
 
-    useEffect(() => {
-        const getUserChats = async () => {
-            if(user?.data?.Id) {
+  const updateCurrentChat = useCallback((chat) => {
+    setMessages([]);
+    setCurrentChat(chat);
+  }, []);
 
-                setIsUserChatsLoading(true)
-                setUserChatsError(null)
+  const createChat = useCallback(async (firstId, secondId) => {
+    if (!firstId || !secondId) return;
 
-                const response = await api.get(`/chat/${user?.data?.Id}`)
-                
-                setIsUserChatsLoading(false)
+    try {
+      const response = await api.post("/chat", {
+        firstId,
+        secondId
+      });
 
-                if(response?.error) {
-                    return setUserChatsError(response)
-                }
+      setUserChats((prev) => {
+        const exists = prev.some(
+          (chat) =>
+            (chat.user1Id === firstId && chat.user2Id === secondId) ||
+            (chat.user1Id === secondId && chat.user2Id === firstId)
+        );
 
-                setUserChats(response?.data)
-            }
-        }
+        if (exists) return prev;
 
-        getUserChats()
-    }, [user])
+        return [...prev, response.data];
+      });
+    } catch (error) {
+      console.log("Error creating chat", error);
+    }
+  }, []);
+  const clearChats = useCallback(() => {
+    setCurrentChat(null);
+    setMessages([]);
+    setUserChats([]);
+  }, []);
 
-    useEffect(() => {
-        const getMessages = async () => {
-                setIsMessagesLoading(true)
-                setMessagesError(null)
-
-                const response = await api.get(`/messages/${currentChat?.id}`)
-                
-                setIsMessagesLoading(false)
-
-                if(response?.error) {
-                    return setMessagesError(response)
-                }
-
-                setMessages(response?.data)
-        }
-
-        getMessages()
-    }, [currentChat])    
-
-    const sendTextMessage = useCallback(async(textMessage, sender, currentChatId, setTextMessage) => {
-        
-        if (!textMessage) return console.log("You must type something...")
-
-        const response = await api.post(`/messages`, {
-            chatId: currentChatId,
-            senderId: sender.Id,
-            text: textMessage
-        })
-
-        if(response?.error) 
-            return setSendTextMessageError(response)
-
-        setNewMessage(response?.data)
-        setMessages((prev) => [...prev, response.data])
-        setTextMessage("")
-    }, [])
-
-    const updateCurrentChat = useCallback((chat) => {
-        setCurrentChat(chat)
-    }, [])
-
-    const createChat = useCallback(async(firstId, secondId) => {
-        const response = await api.post('/chat/', {
-            firstId, 
-            secondId
-        })
-        if(response.error) return console.log("Error creating chat", response)
-        
-        setUserChats((prev) => [...prev, response])
-    }, [])
-
-    return <ChatContext.Provider value={{
+  return (
+    <ChatContext.Provider
+      value={{
         userChats,
         isUserChatsLoading,
         userChatsError,
@@ -188,8 +223,12 @@ export const ChatContextProvider = ({children}) => {
         isMessagesLoading,
         messagesError,
         sendTextMessage,
-        onlineUsers
-    }}>
-        {children}
+        onlineUsers,
+        sendTextMessageError,
+        clearChats
+      }}
+    >
+      {children}
     </ChatContext.Provider>
-}
+  );
+};
