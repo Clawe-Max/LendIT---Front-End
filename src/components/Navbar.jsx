@@ -12,7 +12,7 @@ export function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const { clearChats } = useContext(ChatContext);
-  const { handleSearch, formData, handleChange } = useContext(GameContext);
+  const { handleSearch, formData, handleChangeName } = useContext(GameContext);
 
   async function HandleLogout() {
     try {
@@ -50,7 +50,7 @@ export function Navbar() {
               className="bg-transparent border-none outline-none text-xs text-white placeholder-zinc-500 w-full"
               name="name"
               value={formData.name}
-              onChange={handleChange}
+              onChange={handleChangeName}
             />
           </form>
       </div>

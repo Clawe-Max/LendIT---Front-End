@@ -4,34 +4,43 @@ import { GameContext } from "./GameContext";
 
 export const GameProvider = ({ children }) => {
 
-    const [foundGames, setFoundGames] = useState(null);
+    const [foundGames, setFoundGames] = useState([]);
     const [formData, setFormData] = useState({
-        name: ""
+        name: '',
+        category: ''
     });
 
-    const handleChange = (e) => {
-        const {name, value} = e.target;
-
+    const handleChangeName = (e) => {
         setFormData((prev) => ({
             ...prev,
-            [name]: value
+            name: e.target.value
         }));
+        console.log("formData:", formData);
+    }
+
+    const handleChangeCategory = (value) => {
+        setFormData((prev) => ({
+            ...prev,
+            category: value
+        }));
+        console.log("formData:", formData);
     }
 
     const handleSearch = useCallback( async () => {
         try {
             const response = await api.get("/games", {
                 params: {
-                    name: formData.name ? formData.name : undefined
+                    name: formData.name ? formData.name : undefined,
+                    category: formData.category ? formData.category : undefined
                 }
             });
             setFoundGames(response?.data);
-            console.log("name:", formData)
-            console.log("found games:", foundGames);
+            console.log('formData:', formData);
+            console.log('foundGames:', foundGames);
             } catch (error) {
             console.log(error);
             }
     }, [formData, foundGames])
 
-    return (<GameContext.Provider value={{handleSearch, foundGames, formData, handleChange}}>{children}</GameContext.Provider>);
+    return (<GameContext.Provider value={{handleSearch, foundGames, formData, handleChangeName, handleChangeCategory}}>{children}</GameContext.Provider>);
 };

@@ -1,5 +1,7 @@
 import { DicesIcon, Star, Clock, TrendingUp } from "lucide-react";
 import { GameCard } from "../components/common/GameCard";
+import { useContext } from "react";
+import { GameContext } from "../games/GameContext";
 
 // Jogos mockados — substitua depois por api.get(...)
 const JOGOS_DESTAQUE = [
@@ -72,6 +74,9 @@ const CATEGORIAS = [
   { nome: "Blefe", emoji: "🎭", quantidade: 6 },
 ];
 function Home() {
+
+  const { handleChangeCategory, handleSearch } = useContext(GameContext);
+
   return (
     <div className="min-h-[calc(100vh-52px)] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
       {/* Boas-vindas */}
@@ -105,6 +110,8 @@ function Home() {
             <div
               key={cat.nome}
               className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-yellow-500/50 hover:bg-zinc-750 transition-all cursor-pointer group"
+              onMouseOver={() => {handleChangeCategory(cat.nome)}}
+              onClick={handleSearch}
             >
               <span className="text-2xl">{cat.emoji}</span>
               <div>
