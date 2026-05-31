@@ -4,6 +4,7 @@ import { useAuth } from "../auth/useAuth";
 import api from "../api/axios";
 import { CircleUser, DicesIcon } from "lucide-react";
 import { ChatContext } from "../chat/ChatContext";
+import { GameContext } from "../games/GameContext";
 
 const LOGOUT_URL = "/user/logout";
 
@@ -11,6 +12,7 @@ export function Navbar() {
   const [openMenu, setOpenMenu] = useState(false);
   const { isAuthenticated, logout } = useAuth();
   const { clearChats } = useContext(ChatContext);
+  const { handleSearch, formData, handleChange } = useContext(GameContext);
 
   async function HandleLogout() {
     try {
@@ -41,11 +43,16 @@ export function Navbar() {
           <circle cx="11" cy="11" r="8" />
           <path d="M21 21l-4.35-4.35" />
         </svg>
-        <input
-          type="text"
-          placeholder="Buscar jogos..."
-          className="bg-transparent border-none outline-none text-xs text-white placeholder-zinc-500 w-full"
-        />
+          <form onSubmit={(e) => {e.preventDefault(); handleSearch()}}>
+            <input
+              type="text"
+              placeholder="Buscar jogos..."
+              className="bg-transparent border-none outline-none text-xs text-white placeholder-zinc-500 w-full"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </form>
       </div>
 
       {isAuthenticated ? (
