@@ -3,40 +3,52 @@ import { CardGames } from "../components/MyGames/CardGames";
 import { useState } from "react";
 import Modal from "../components/common/Modal";
 import { Input } from "../components/common/Input";
+import api from "../api/axios";
+import { useFetch } from "../hooks/useFetch";
+import { Trash2 } from "lucide-react";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import { truncateText } from "../lib/truncateText";
+
+const GAME_URL = "/games";
+const defaultFormData = {
+  code: "",
+  name: "",
+  category: "",
+  description: "",
+};
 
 function MyGames() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [players, setPlayers] = useState("");
-  const [time, setTime] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
-  const [games, setGames] = useState([]);
+  const [loadingCreate, setLoadingCreate] = useState(false);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState(defaultFormData);
 
-  async function handleAddGame() {
-    if (!name || !players || !time || !category || !description) {
-      return alert("Preencha todos os campos.");
-    }
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((state) => ({ ...state, [name]: value }));
+    setError(null);
+  }
+  const { data, refetch, loading } = useFetch(`${GAME_URL}/myGames`);
+  async function handleSubmit(e) {
+    e.preventDefault();
     try {
-      await axios.post("http://localhost:3333/games", {
-        name,
-        players,
-        time,
-        category,
-        description,
-      });
-      await fetchGames();
-      setName("");
-      setPlayers("");
-      setTime("");
-      setCategory("");
-      setDescription("");
+      setLoadingCreate(true);
+      await api.post(GAME_URL, formData);
+      setFormData(defaultFormData);
+      refetch();
       setIsModalOpen(false);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        "Connection timed out. Please try again.";
+      setError(message);
+    } finally {
+      setLoadingCreate(false);
     }
   }
-
+  if (loading) {
+    return <LoadingSpinner />;
+  }
   return (
     <div className="min-h-[calc(100vh-52px)] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto flex flex-col">
       <div className="mb-10">
@@ -61,8 +73,6 @@ function MyGames() {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold">Meus Jogos</h2>
-
-            <span className="text-sm text-zinc-400">2 jogos cadastrados</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* CARD */}
@@ -77,8 +87,7 @@ function MyGames() {
                   </span>
                   <h3 className="font-semibold text-xl mt-1">Nome do Jogo</h3>
                   <div className="mt-4 flex flex-col gap-2 text-zinc-300">
-                    <span>👥 ∞ Jogadores</span>
-                    <span>⏱ ∞ Minutos</span>
+                    <span>Sobre o jogo</span>
                   </div>
                 </div>
                 <div className="p-4 mt-auto">
@@ -94,50 +103,60 @@ function MyGames() {
                     onClose={() => setIsModalOpen(false)}
                     title="Adicionar novo jogo"
                   >
-                    <div className="flex flex-col gap-4">
+                    <form
+                      onSubmit={handleSubmit}
+                      className="flex flex-col gap-4"
+                    >
                       <Input
+                        name="name"
                         type="text"
                         placeholder="Nome do jogo"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={formData.name}
+                        onChange={handleChange}
                       />
                       <Input
-                        type="number"
-                        placeholder="Quantidade de jogadores"
-                        value={players}
-                        onChange={(e) => setPlayers(e.target.value)}
+                        name="code"
+                        type="text"
+                        placeholder="Código"
+                        value={formData.code}
+                        onChange={handleChange}
                       />
                       <Input
-                        type="number"
-                        placeholder="Tempo médio do jogo (Minutos)"
-                        value={time}
-                        onChange={(e) => setTime(e.target.value)}
-                      />
-                      <Input
+                        name="category"
                         type="text"
                         placeholder="Categoria"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                        value={formData.category}
+                        onChange={handleChange}
                       />
                       <Input
+                        name="description"
                         type="text"
                         placeholder="Descrição"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={formData.description}
+                        onChange={handleChange}
                       />
                       <button
-                        onClick={handleAddGame}
+                        disabled={loadingCreate}
                         className="bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors"
                       >
                         Adicionar jogo
                       </button>
-                    </div>
+                    </form>
                   </Modal>
                 </div>
               </div>
             </section>
             {/* FINALIZA O CARD */}
-            <CardGames />
+            {data.data.map((game) => (
+              <CardGames
+                name={game.name}
+                category={game.category}
+                description={game.description}
+                key={game.id}
+                code={game.code}
+                refetch={refetch}
+              />
+            ))}
           </div>
         </section>
       </div>
