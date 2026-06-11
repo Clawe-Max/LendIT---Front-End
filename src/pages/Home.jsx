@@ -135,9 +135,7 @@ function Home() {
         </div>
 
         {/* Aviso de dados mockados — remova quando a API estiver pronta */}
-        <div className="mb-4 px-3 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-xs text-yellow-400 flex items-center gap-2">
-          ⚠️ Dados de exemplo — conecte à API para exibir jogos reais.
-        </div>
+        
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {JOGOS_DESTAQUE.map((jogo) => (
