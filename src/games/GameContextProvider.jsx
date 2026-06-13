@@ -1,4 +1,4 @@
-import { useCallback, useState} from "react";
+import { useCallback, useEffect, useState} from "react";
 import api from "../api/axios";
 import { GameContext } from "./GameContext";
 
@@ -9,6 +9,8 @@ export const GameProvider = ({ children }) => {
         name: '',
         category: ''
     });
+
+    const [category, setCategory] = useState('');
 
     const handleChangeName = (e) => {
         setFormData((prev) => ({
@@ -28,19 +30,27 @@ export const GameProvider = ({ children }) => {
 
     const handleSearch = useCallback( async () => {
         try {
-            const response = await api.get("/games", {
+            const { data } = await api.get("/games", {
                 params: {
                     name: formData.name ? formData.name : undefined,
                     category: formData.category ? formData.category : undefined
                 }
             });
-            setFoundGames(response?.data);
+            setFoundGames(data.data);
             console.log('formData:', formData);
             console.log('foundGames:', foundGames);
             } catch (error) {
-            console.log(error);
+                console.log(error);
             }
-    }, [formData, foundGames])
+    }, [formData, foundGames]);
 
-    return (<GameContext.Provider value={{handleSearch, foundGames, formData, handleChangeName, handleChangeCategory}}>{children}</GameContext.Provider>);
+    useEffect(() => {
+        const search = () => {
+            handleSearch();
+        }
+
+        search();
+    }, [category]);
+
+    return (<GameContext.Provider value={{handleSearch, foundGames, formData, handleChangeName, handleChangeCategory, category, setCategory}}>{children}</GameContext.Provider>);
 };
