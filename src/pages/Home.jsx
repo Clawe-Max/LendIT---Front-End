@@ -68,14 +68,17 @@ const JOGOS_DESTAQUE = [
 ];
 
 const CATEGORIAS = [
-  { nome: "Estratégia", emoji: "♟️", quantidade: 12 },
-  { nome: "Cooperativo", emoji: "🤝", quantidade: 8 },
-  { nome: "Família", emoji: "👨‍👩‍👧", quantidade: 15 },
-  { nome: "Blefe", emoji: "🎭", quantidade: 6 },
+  { nome: "Tabletop", codigo: "TABLETOP", emoji: "🏓"},
+  { nome: "Tabuleiro", codigo: "BOARD", emoji: "♟️"},
+  { nome: "Cartas", codigo: "CARD", emoji: "♠️"},
+  { nome: "Quebra-cabeça", codigo: "PUZZLE", emoji: "🧩"},
+  { nome: "Cartucho", codigo: "CARTRIDGES", emoji: "🕹️"},
+  { nome: "Disco", codigo: "DISC", emoji: "💿"},
 ];
 function Home() {
 
-  const { handleChangeCategory, handleSearch } = useContext(GameContext);
+  const destaque = false;
+  const { handleChangeCategory, foundGames, handleSearch, category, setCategory } = useContext(GameContext);
 
   return (
     <div className="min-h-[calc(100vh-52px)] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
@@ -98,7 +101,7 @@ function Home() {
       </div>
 
       {/* Categorias rápidas */}
-      <div className="mb-10">
+      <div className="mb-10 select-none">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-semibold text-zinc-200 flex items-center gap-2">
             <TrendingUp size={16} className="text-yellow-500" />
@@ -109,16 +112,15 @@ function Home() {
           {CATEGORIAS.map((cat) => (
             <div
               key={cat.nome}
-              className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-yellow-500/50 hover:bg-zinc-750 transition-all cursor-pointer group"
-              onMouseOver={() => {handleChangeCategory(cat.nome)}}
-              onClick={handleSearch}
+              className={`border rounded-xl px-4 py-3 flex items-center gap-3 hover:border-yellow-500/50 hover:bg-zinc-750 transition-all cursor-pointer group ${cat.nome == category ? 'border-yellow-500/50 bg-zinc-750': 'border-zinc-700 bg-zinc-800'}`}
+              value={cat.nome}
+              onClick={() => {handleChangeCategory(cat.codigo); setCategory(cat.nome); handleSearch()}}
             >
               <span className="text-2xl">{cat.emoji}</span>
               <div>
-                <p className="text-sm font-medium text-white group-hover:text-yellow-400 transition-colors">
+                <p className={`text-sm font-medium group-hover:text-yellow-400 transition-colors ${category == cat.nome ? 'text-yellow-400': 'text-white'}`}>
                   {cat.nome}
                 </p>
-                <p className="text-xs text-zinc-500">{cat.quantidade} jogos</p>
               </div>
             </div>
           ))}
@@ -126,23 +128,41 @@ function Home() {
       </div>
 
       {/* Jogos em destaque */}
+      {destaque && (
+
+        <div>
+          <div className="flex items-center mb-4">
+            <h2 className="text-base font-semibold text-zinc-200 flex items-center gap-2">
+              <Star size={16} className="text-yellow-500" />
+              Jogos em Destaque
+            </h2>
+          </div>
+
+          {/* Aviso de dados mockados — remova quando a API estiver pronta */}
+          
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {JOGOS_DESTAQUE.map((jogo) => (
+              <GameCard key={jogo.id} jogo={jogo} />
+            ))}
+          </div>
+        </div>
+      )}
+
       <div>
-        <div className="flex items-center mb-4">
-          <h2 className="text-base font-semibold text-zinc-200 flex items-center gap-2">
-            <Star size={16} className="text-yellow-500" />
-            Jogos em Destaque
-          </h2>
-        </div>
+          <div className="flex items-center mb-4">
+            <h2 className="text-base font-semibold text-zinc-200 flex items-center gap-2">
+              <Star size={16} className="text-yellow-500" />
+              Resultados
+            </h2>
+          </div>
 
-        {/* Aviso de dados mockados — remova quando a API estiver pronta */}
-        
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {JOGOS_DESTAQUE.map((jogo) => (
-            <GameCard key={jogo.id} jogo={jogo} />
-          ))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {foundGames.map((jogo) => (
+              <GameCard key={jogo.id} jogo={jogo} />
+            ))}
+          </div>
         </div>
-      </div>
     </div>
   );
 }
