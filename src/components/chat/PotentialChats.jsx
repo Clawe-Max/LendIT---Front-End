@@ -18,12 +18,8 @@ export const PotentialChats = () => {
             >
               {u.username}
               <span
-                className={
-                  onlineUsers?.some((user) => user.userId === u?.id)
-                    ? `bg-green-500 w-2.5 h-2.5 absolute rounded-full -top-0.5 -right-0.5}`
-                    : "absolute"
-                }
-              ></span>
+                className={`w-2 h-2 rounded-full shrink-0 ${onlineUsers?.some((online) => online.userId === u?.id) ? "bg-green-500" : "bg-zinc-600"}`}
+              />
             </div>
           ))}
       </div>

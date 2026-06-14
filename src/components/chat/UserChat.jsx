@@ -8,7 +8,7 @@ export const UserChat = ({ chat, user }) => {
   const { onlineUsers } = useContext(ChatContext);
 
   const isOnline = onlineUsers?.some(
-    (user) => user.userId === recipientUser?.data.Id
+    (user) => user.userId === recipientUser?.data.Id,
   );
 
   return (
@@ -30,9 +30,9 @@ export const UserChat = ({ chat, user }) => {
       </div>
       <span
         className={
-          isOnline
-            ? `bg-green-500 w-2.5 h-2.5 absolute rounded-full -top-0.5 -right-0.5 }`
-            : "absolute"
+          isOnline && (
+            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-zinc-800 rounded-full" />
+          )
         }
       ></span>
     </div>

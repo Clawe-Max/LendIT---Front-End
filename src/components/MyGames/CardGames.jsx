@@ -1,23 +1,44 @@
-import { Trash2 } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 import Modal from "../common/Modal";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import api from "../../api/axios";
 import { Input } from "../common/Input";
 import { truncateText } from "../../lib/truncateText";
+import { Select } from "../common/Select";
+
 const GAME_URL = "/games";
+
+const gameCategories = Object.freeze({
+  MESA: "TABLETOP",
+  CARTAS: "CARD",
+  TABULEIRO: "BOARD",
+  QUEBRA_CABEÇAS: "PUZZLE",
+  CARTUCHO: "CARTRIDGES",
+  DISCO: "DISC",
+});
+
 const defaultFormData = {
   name: "",
-  category: "",
+  category: gameCategories.MESA,
   description: "",
+  minPlayers: 1,
+  maxPlayers: 1,
+  minAge: 1,
 };
 
-function CardGames({ name, category, description, code, refetch }) {
+function CardGames({ name, category, description, code, refetch, image }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [file, setFile] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [formData, setFormData] = useState(defaultFormData);
   const [error, setError] = useState(null);
+  const inputRef = useRef(null);
+
+  function handleFileChange(e) {
+    setFile(e.target.files[0]);
+  }
   async function handleDelete(code) {
     try {
       setLoadingDelete(true);
@@ -43,10 +64,25 @@ function CardGames({ name, category, description, code, refetch }) {
     e.preventDefault();
     try {
       setLoadingEdit(true);
-      formData.code = code;
-      console.log(formData);
-      await api.patch(GAME_URL, formData);
+
+      const updatedGame = new FormData();
+      updatedGame.append("code", String(Number(code)));
+      if (formData.name.trim()) updatedGame.append("name", formData.name);
+      if (formData.category.trim())
+        updatedGame.append("category", formData.category);
+      if (formData.description.trim())
+        updatedGame.append("description", formData.description);
+      updatedGame.append("minPlayers", String(formData.minPlayers));
+      updatedGame.append("maxPlayers", String(formData.maxPlayers));
+      updatedGame.append("minAge", String(formData.minAge));
+      if (file) updatedGame.append("image", file);
+
+      await api.patch(GAME_URL, updatedGame, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       setFormData(defaultFormData);
+      setFile(null);
       refetch();
       setIsEditModalOpen(false);
     } catch (err) {
@@ -63,7 +99,7 @@ function CardGames({ name, category, description, code, refetch }) {
       <div className="bg-zinc-800 relative rounded-xl overflow-hidden border border-zinc-700 hover:border-yellow-500/50 transition-all duration-300 min-h-96 flex flex-col">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="absolute right-2 top-2 hover:text-red-900 cursor-pointer"
+          className="absolute right-2 top-2 hover:text-red-900 hover:bg-black/60 cursor-pointer bg-black/35 p-1 rounded-full"
         >
           <Trash2 />
         </button>
@@ -91,8 +127,11 @@ function CardGames({ name, category, description, code, refetch }) {
             </button>
           </div>
         </Modal>
-        <div className="h-40 bg-yellow-500/30 flex items-center justify-center"></div>
-
+        <img
+          className="h-40 bg-yellow-500/30 flex items-center justify-center"
+          src={`http://localhost:3000/uploads/game_images/${image}`}
+          alt="UPLOAD"
+        />
         <div className="p-4">
           <span className="text-xs text-yellow-500 uppercase">
             {truncateText(category)}
@@ -100,7 +139,7 @@ function CardGames({ name, category, description, code, refetch }) {
           <h3 className="font-semibold text-xl mt-1">
             {truncateText(name, 20)}
           </h3>
-          <div className="mt-4 flex flex-col gap-2 text-zinc-300">
+          <div className="mt-4 flex flex-col gap-2 text333333333333333333333333333333333333333333333333333333333333333333333333333333333333333-zinc-300">
             <span>{truncateText(description, 500)}</span>
           </div>
         </div>
@@ -124,10 +163,9 @@ function CardGames({ name, category, description, code, refetch }) {
                 value={formData.name}
                 onChange={handleChange}
               />
-              <Input
+              <Select
                 name="category"
-                type="text"
-                placeholder={category}
+                options={gameCategories}
                 value={formData.category}
                 onChange={handleChange}
               />
@@ -138,7 +176,51 @@ function CardGames({ name, category, description, code, refetch }) {
                 value={formData.description}
                 onChange={handleChange}
               />
-              <button className="bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors">
+              <Input
+                name="minPlayers"
+                type="number"
+                min="0"
+                max="10"
+                placeholder="Quantidade mínima de jogadores"
+                value={formData.minPlayers}
+                onChange={handleChange}
+              />
+              <Input
+                name="maxPlayers"
+                type="number"
+                min="1"
+                max="50"
+                placeholder="Quantidade máxima de jogadores"
+                value={formData.maxPlayers}
+                onChange={handleChange}
+              />
+              <Input
+                name="minAge"
+                type="number"
+                min="0"
+                max="18"
+                placeholder="Idade mínima para jogar o jogo"
+                value={formData.minAge}
+                onChange={handleChange}
+              />
+              <label className="w-full p-3focus:ring-2 font-bold text-zinc-100 placeholder:font-bol bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 outline-none focus:border-yellow-500 cursor-pointer">
+                <span className="flex items-center space-x-2 ">
+                  <span className="font-bold text-zinc-500 hover:text-white flex gap-4 ">
+                    <Upload />
+                    Escolha uma imagem para seu jogo
+                  </span>
+                  <input
+                    ref={inputRef}
+                    type="file"
+                    onChange={handleFileChange}
+                    name="file_upload"
+                    className="hidden"
+                    accept="image/png,image/jpeg"
+                    id="input"
+                  />
+                </span>
+              </label>
+              <button className="bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors cursor-pointer">
                 Editar o jogo
               </button>
             </form>

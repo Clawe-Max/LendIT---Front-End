@@ -1,6 +1,6 @@
-import { CirclePlus, DicesIcon } from "lucide-react";
+import { CirclePlus, DicesIcon, Upload } from "lucide-react";
 import { CardGames } from "../components/MyGames/CardGames";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Modal from "../components/common/Modal";
 import { Input } from "../components/common/Input";
 import api from "../api/axios";
@@ -18,37 +18,58 @@ const gameCategories = Object.freeze({
   TABULEIRO: "BOARD",
   QUEBRA_CABEÇAS: "PUZZLE",
   CARTUCHO: "CARTRIDGES",
-  DISCO: "DISC"
+  DISCO: "DISC",
 });
 
 const defaultFormData = {
-  code: "",
   name: "",
-  category: "",
+  category: gameCategories.MESA,
   description: "",
-  minPlayers: 0,
-  maxPlayers: 1,
-  minAge: 0
+  minPlayers: null,
+  maxPlayers: null,
+  minAge: null,
 };
 
 function MyGames() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [file, setFile] = useState(null);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState(defaultFormData);
 
+  const inputRef = useRef(null);
+
+  function handleFileChange(e) {
+    setFile(e.target.files[0]);
+  }
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData((state) => ({ ...state, [name]: value }));
     setError(null);
   }
   const { data, refetch, loading } = useFetch(`${GAME_URL}/myGames`);
+  console.log(data);
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       setLoadingCreate(true);
-      await api.post(GAME_URL, formData);
+      const { name, category, description, minPlayers, maxPlayers, minAge } =
+        formData;
+
+      const newGame = new FormData();
+      if (name.trim()) newGame.append("name", name);
+      if (category.trim()) newGame.append("category", category);
+      if (description.trim()) newGame.append("description", description);
+      newGame.append("minPlayers", String(minPlayers));
+      newGame.append("maxPlayers", String(maxPlayers));
+      newGame.append("minAge", String(minAge));
+      if (file) newGame.append("image", file);
+
+      await api.post(GAME_URL, newGame, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       setFormData(defaultFormData);
+      setFile(null);
       refetch();
       setIsModalOpen(false);
     } catch (err) {
@@ -77,10 +98,9 @@ function MyGames() {
           <span className="text-yellow-500">catálogo.</span>
         </h1>
         <p className="text-zinc-400 mt-2 text-sm max-w-lg">
-          Empreste seus jogos! 
-          Veja mais pessoas aproveitando sua coleção. 
-          Você anuncia, combina o aluguel e
-          recebe de volta quando terminarem de jogar.
+          Empreste seus jogos! Veja mais pessoas aproveitando sua coleção. Você
+          anuncia, combina o aluguel e recebe de volta quando terminarem de
+          jogar.
         </p>
       </div>
       <div className="flex flex-col gap-10">
@@ -129,13 +149,6 @@ function MyGames() {
                         value={formData.name}
                         onChange={handleChange}
                       />
-                      <Input
-                        name="code"
-                        type="text"
-                        placeholder="Código"
-                        value={formData.code}
-                        onChange={handleChange}
-                      />
                       <Select
                         name="category"
                         type="text"
@@ -151,33 +164,54 @@ function MyGames() {
                         value={formData.description}
                         onChange={handleChange}
                       />
-                      <Input 
+                      <Input
                         name="minPlayers"
                         type="number"
-                        min="0" max="10"
+                        min="0"
+                        max="10"
                         placeholder="Quantidade mínima de jogadores"
                         value={formData.minPlayers}
                         onChange={handleChange}
                       />
-                      <Input 
+                      <Input
                         name="maxPlayers"
                         type="number"
-                        min="1" max="50"
+                        min="1"
+                        max="50"
                         placeholder="Quantidade máxima de jogadores"
                         value={formData.maxPlayers}
                         onChange={handleChange}
                       />
-                      <Input 
+                      <Input
                         name="minAge"
                         type="number"
-                        min="0" max="18"
+                        min="0"
+                        max="18"
                         placeholder="Idade mínima para jogar o jogo"
                         value={formData.minAge}
                         onChange={handleChange}
                       />
+                      <label className="w-full p-3focus:ring-2 font-bold text-zinc-100 placeholder:font-bol bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 outline-none focus:border-yellow-500 cursor-pointer">
+                        <span className="flex items-center space-x-2 ">
+                          <span className="font-bold text-zinc-500 hover:text-white flex gap-4 ">
+                            <Upload />
+                            Escolha uma imagem para seu jogo
+                          </span>
+                          <input
+                            ref={inputRef}
+                            type="file"
+                            onChange={handleFileChange}
+                            name="image"
+                            className="hidden"
+                            accept="image/png,image/jpeg"
+                            id="input"
+                          />
+                        </span>
+                      </label>
+
                       <button
                         disabled={loadingCreate}
-                        className="bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors"
+                        className="bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors cursor-pointer"
                       >
                         Adicionar jogo
                       </button>
@@ -193,8 +227,9 @@ function MyGames() {
                 category={game.category}
                 description={game.description}
                 key={game.id}
-                code={game.code}
                 refetch={refetch}
+                code={game.code}
+                image={game.imagePath}
               />
             ))}
           </div>
