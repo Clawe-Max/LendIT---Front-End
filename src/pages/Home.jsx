@@ -2,6 +2,7 @@ import { DicesIcon, Star, Clock, TrendingUp } from "lucide-react";
 import { GameCard } from "../components/common/GameCard";
 import { useContext } from "react";
 import { GameContext } from "../games/GameContext";
+import { Link, Navigate } from "react-router-dom";
 
 // Jogos mockados — substitua depois por api.get(...)
 const JOGOS_DESTAQUE = [
@@ -139,8 +140,6 @@ function Home() {
           </div>
 
           {/* Aviso de dados mockados — remova quando a API estiver pronta */}
-          
-
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {JOGOS_DESTAQUE.map((jogo) => (
               <GameCard key={jogo.id} jogo={jogo} />
@@ -158,8 +157,10 @@ function Home() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {foundGames.map((jogo) => (
-              <GameCard key={jogo.id} jogo={jogo} />
+            {foundGames.map((jogo) => ( 
+              <Link to={`game/${jogo.code}`}>
+                <GameCard key={jogo.id} jogo={jogo} />
+              </Link>
             ))}
           </div>
         </div>

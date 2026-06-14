@@ -42,7 +42,6 @@ function GamePage() {
   const navigate = useNavigate();
   const [game, setGame] = useState(null);
   const [dates, setDates] = useState(null);
-  const [activePhoto, setActivePhoto] = useState(0);
   const [formData, setFormData] = useState(defaultFormData);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -58,10 +57,8 @@ function GamePage() {
     e.preventDefault();
     try {
       setLoadingCreate(true);
-      console.log(formData)
       await api.post(`/loan`, formData);
       setFormData(defaultFormData);
-      alert("Deu bom");
       navigate("/")
     } catch (err) {
       const message =
@@ -139,7 +136,15 @@ function GamePage() {
         <div className="relative z-10 max-w-5xl mx-auto px-6 pt-16 pb-10 flex flex-col sm:flex-row items-center sm:items-end gap-6">
           {/* Ícone grande do jogo */}
           <div className={`w-32 h-32 rounded-2xl bg-linear-to-br ${gradientClass} border-2 border-yellow-500/30 flex items-center justify-center shadow-2xl shrink-0`}>
-            <img src={`http://localhost:3000/${game.imagePath}`} alt="" />
+          {game.imagePath? 
+          <img 
+            className="h-full w-full object-contain"
+            src={`http://localhost:3000/uploads/game_images/${game.imagePath}`} 
+            alt="image"
+          /> :
+          <img className="h-11/12" src="/games-set.svg" alt="" />
+          }
+            
           </div>
 
           {/* Título e categoria */}
@@ -178,8 +183,15 @@ function GamePage() {
               <DicesIcon size={15} className="text-yellow-500" />
               Imagem
             </h2>
-            <div className={`w-full h-56 rounded-xl bg-linear-to-br ${gradientClass} flex items-center justify-center border border-zinc-700 mb-3`}>
-              <img src={`http://localhost:3000/${game.imagePath}`} alt="" />
+            <div className={game.imagePath? `w-fit h-56 rounded-xl bg-linear-to-br ${gradientClass} flex items-center justify-center border border-zinc-700 mb-3` : `w-full h-10`}>
+              {game.imagePath? 
+                <img 
+                  className="h-full w-full object-contain rounded-xl"
+                  src={`http://localhost:3000/uploads/game_images/${game.imagePath}`} 
+                  alt="" 
+                /> :
+                <p>Nenhum imagem foi fornecida.</p>
+              }
             </div>
           </section>
 
@@ -225,7 +237,7 @@ function GamePage() {
                 </div>
               </div>
               <button 
-                className="w-full bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2.5 
+                className="w-full my-2 bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2.5 
                 rounded-lg transition-colors text-sm"
                 type="submit"
               >

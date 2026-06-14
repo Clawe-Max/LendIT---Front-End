@@ -4,10 +4,11 @@ function GameCard({ jogo }) {
   return (
     <div className="group relative bg-zinc-800 rounded-xl overflow-hidden border border-zinc-700 hover:border-yellow-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-yellow-500/10 cursor-pointer">
       {/* Área da imagem / cor */}
-      <div
-        className={`h-32 bg-gradient-to-br ${".\\uploads\\game_images\\" + jogo.imagePath} flex items-center justify-center relative`}
-      >
-        <img src={"http://localhost:3000/uploads/game_images/" + jogo.imagePath}/>
+      <div className="h-32 bg-linear-to-br flex justify-center items-center relative overflow-hidden">
+        <img 
+          className="object-center object-cover"
+          src={"http://localhost:3000/uploads/game_images/" + jogo.imagePath}
+        />
       </div>
 
       {/* Infos */}
@@ -26,7 +27,7 @@ function GameCard({ jogo }) {
             <Clock size={10} /> {jogo.minAge}
           </span>
         </div>
-        <button className="mt-2 w-full text-xs bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-1.5 rounded-lg transition-colors">
+        <button className="mt-2 w-full text-xs bg-yellow-500 hover:bg-yellow-300 text-zinc-900 font-bold py-1.5 rounded-lg transition-colors">
           Alugar
         </button>
       </div>
