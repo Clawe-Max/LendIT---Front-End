@@ -10,6 +10,7 @@ import { Chat } from "./pages/Chat";
 import { ChatContextProvider } from "./chat/ChatContextProvider";
 import { UserContext } from "./user/UserContext";
 import { MyGames } from "./pages/MyGames";
+import { GamePage } from "./pages/GamePage";
 import { GameProvider } from "./games/GameContextProvider";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
                       <Route path="chat" element={<Chat />} />
                       <Route path="mygames" element={<MyGames />} />
                     </Route>
+                    <Route path="game/:code" element={<GamePage />} />
                   </Route>
                 </Routes>
               </div>
