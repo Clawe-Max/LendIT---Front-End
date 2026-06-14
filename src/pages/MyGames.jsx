@@ -99,7 +99,7 @@ function MyGames() {
         </h1>
         <p className="text-zinc-400 mt-2 text-sm max-w-lg">
           Empreste seus jogos! Veja mais pessoas aproveitando sua coleção. Você
-          anuncia, combina o aluguel e recebe de volta quando terminarem de
+          anuncia, combina o empréstimo e recebe de volta quando terminarem de
           jogar.
         </p>
       </div>
