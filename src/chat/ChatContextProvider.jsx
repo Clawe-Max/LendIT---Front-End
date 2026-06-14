@@ -75,8 +75,8 @@ export const ChatContextProvider = ({ children }) => {
         const response = await api.get("/user");
         const existingUsers = new Set(
           userChats?.map((chat) =>
-            chat.user1Id === user.data.Id ? chat.user2Id : chat.user1Id
-          )
+            chat.user1Id === user.data.Id ? chat.user2Id : chat.user1Id,
+          ),
         );
 
         const pChats = response.data.data.filter((u) => {
@@ -152,7 +152,7 @@ export const ChatContextProvider = ({ children }) => {
         const response = await api.post("/messages", {
           senderId: sender.Id,
           chatId: currentChatId,
-          text: textMessage
+          text: textMessage,
         });
 
         setMessages((prev) => {
@@ -171,11 +171,10 @@ export const ChatContextProvider = ({ children }) => {
         setSendTextMessageError(error);
       }
     },
-    []
+    [],
   );
 
   const updateCurrentChat = useCallback((chat) => {
-    setMessages([]);
     setCurrentChat(chat);
   }, []);
 
@@ -185,14 +184,14 @@ export const ChatContextProvider = ({ children }) => {
     try {
       const response = await api.post("/chat", {
         firstId,
-        secondId
+        secondId,
       });
 
       setUserChats((prev) => {
         const exists = prev.some(
           (chat) =>
             (chat.user1Id === firstId && chat.user2Id === secondId) ||
-            (chat.user1Id === secondId && chat.user2Id === firstId)
+            (chat.user1Id === secondId && chat.user2Id === firstId),
         );
 
         if (exists) return prev;
@@ -225,7 +224,7 @@ export const ChatContextProvider = ({ children }) => {
         sendTextMessage,
         onlineUsers,
         sendTextMessageError,
-        clearChats
+        clearChats,
       }}
     >
       {children}
