@@ -106,6 +106,12 @@ export function Navbar() {
                   >
                     Chat
                   </Link>
+                  <Link
+                    to="/loans"
+                    className="block px-4 py-2.5 text-sm text-zinc-400 hover:bg-zinc-700 hover:text-white transition-colors"
+                  >
+                    Empréstimos
+                  </Link>
                   <div className="h-px bg-zinc-800 my-1" />
                   <button
                     onClick={HandleLogout}
