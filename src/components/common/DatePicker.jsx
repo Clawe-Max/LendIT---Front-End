@@ -17,8 +17,11 @@ const DatePicker = ({ className, name, datesToDisable, onChange, ...rest }) => {
       to: new Date(range.deadline)
     })) || [];
 
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
     const fp = flatpickr(inputRef.current, {
-      minDate: "today",
+      minDate: tomorrow,
       disable: formattedDatesToDisable,
       dateFormat: "Y-m-d",
       onChange: (selectedDates, dateStr) => {

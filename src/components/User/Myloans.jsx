@@ -1,18 +1,18 @@
-import { useNavigate } from "react-router-dom";
 import { PackageSearch } from "lucide-react";
 import { useFetch } from "../../hooks/useFetch";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { LoanCard } from "../Loan/LoanCard";
+import { use, useContext } from "react";
+import { UserContext } from "../../user/UserContext";
 
 const LOANS_URL = "/loan/me";
 
 export function MyLoans() {
-  const navigate = useNavigate();
-
-  const { data, loading, error } = useFetch(LOANS_URL);
+  const { user } = useContext(UserContext);
+  const { data, loading, error, refetch } = useFetch(LOANS_URL);
   const loans = data?.data ?? data ?? [];
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) return <LoadingSpinner />; 
 
   if (error) {
     return (
@@ -37,7 +37,8 @@ export function MyLoans() {
         <LoanCard
           key={loan.id}
           loan={loan}
-          onClick={() => navigate(`/loan/${loan.id}`)}
+          user={user}
+          refetch={refetch}
         />
       ))}
     </div>

@@ -30,7 +30,6 @@ function App() {
                       <Route path="user" element={<User />} />
                       <Route path="chat" element={<Chat />} />
                       <Route path="mygames" element={<MyGames />} />
-                      <Route path="loan/:id" element={<LoanPage />} />
                     </Route>
                     <Route path="game/:code" element={<GamePage />} />
                   </Route>
