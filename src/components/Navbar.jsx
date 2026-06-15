@@ -5,6 +5,7 @@ import api from "../api/axios";
 import { CircleUser, DicesIcon } from "lucide-react";
 import { ChatContext } from "../chat/ChatContext";
 import { GameContext } from "../games/GameContext";
+import { useLocation } from "react-router-dom";
 
 const LOGOUT_URL = "/user/logout";
 
@@ -13,6 +14,8 @@ export function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const { clearChats } = useContext(ChatContext);
   const { handleSearch, formData, handleChangeName } = useContext(GameContext);
+  const location = useLocation();
+  const fullUrl = window.location.origin + location.pathname + location.search;
 
   async function HandleLogout() {
     try {
@@ -33,27 +36,29 @@ export function Navbar() {
         <DicesIcon />
         LendIT
       </Link>
-      <div className="flex items-center bg-zinc-900 border border-zinc-700 rounded-md px-2.5 h-8 gap-1.5 focus-within:ring-2 focus-within:ring-yellow-500 transition-all max-w-1/3 w-full">
-        <svg
-          className="w-3 h-3 stroke-zinc-600"
-          viewBox="0 0 24 24"
-          fill="none"
-          strokeWidth="2"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="M21 21l-4.35-4.35" />
-        </svg>
-          <form onSubmit={(e) => {e.preventDefault(); handleSearch()}}>
-            <input
-              type="text"
-              placeholder="Buscar jogos..."
-              className="bg-transparent border-none outline-none text-xs text-white placeholder-zinc-500 w-full"
-              name="name"
-              value={formData.name}
-              onChange={handleChangeName}
-            />
-          </form>
-      </div>
+      {fullUrl === "http://localhost:5173/" && (
+        <div className="flex items-center bg-zinc-900 border border-zinc-700 rounded-md px-2.5 h-8 gap-1.5 focus-within:ring-2 focus-within:ring-yellow-500 transition-all max-w-1/3 w-full">
+          <svg
+            className="w-3 h-3 stroke-zinc-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            strokeWidth="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+            <form onSubmit={(e) => {e.preventDefault(); handleSearch()}}>
+              <input
+                type="text"
+                placeholder="Buscar jogos..."
+                className="bg-transparent border-none outline-none text-xs text-white placeholder-zinc-500 w-full"
+                name="name"
+                value={formData.name}
+                onChange={handleChangeName}
+              />
+            </form>
+        </div>
+      )}
 
       {isAuthenticated ? (
         <div className="flex items-center gap-2 h-full">
