@@ -15,6 +15,7 @@ import { useState } from "react";
 import api from "../api/axios";
 import { useAuth } from "../auth/useAuth";
 import { ErrorMessage } from "../components/common/ErrorMessage";
+import { MyLoans } from "../components/User/Myloans";
 
 const DELETE_URL = "/user/me";
 
@@ -154,7 +155,7 @@ function User() {
         </TabsContent>
 
         <TabsContent className="w-full flex justify-center" value="orders">
-          <div className="text-white">Pedidos do usuário</div>
+          <MyLoans />
         </TabsContent>
 
         <TabsContent className="w-full flex justify-center" value="account">

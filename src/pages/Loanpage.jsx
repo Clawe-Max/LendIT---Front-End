@@ -18,9 +18,6 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 import { useFetch } from "../hooks/useFetch";
 import { UserContext } from "../user/UserContext";
 
-const LOAN_URL = "/loan";
-
-// Status possíveis: "analysis" | "accepted" | "started" | "returning"
 const STATUS_LABEL = {
   analysis: { label: "Em Análise", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/30" },
   accepted: { label: "Aceito", color: "text-green-400", bg: "bg-green-400/10 border-green-400/30" },
@@ -83,8 +80,7 @@ function LoanPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-
-  const { data, loading, error, refetch } = useFetch(`${LOAN_URL}/${id}`);
+  const { data, loading, error, refetch } = useFetch(`loan/unique/${id}`);
 
   // Estados dos modais
   const [modal, setModal] = useState(null); // "delete" | "cancel" | "accept" | "start" | "startReturn" | "confirmReturn" | "confirmOverdue" | "editDate"
@@ -125,7 +121,6 @@ function LoanPage() {
   const status = loan.status; // "analysis" | "accepted" | "started" | "returning"
   const statusInfo = STATUS_LABEL[status] ?? STATUS_LABEL.analysis;
 
-  // ⚠️ Ajuste os IDs conforme o que a API retornar
   const currentUserId = user?.data?.id;
   const isOwner = currentUserId === loan.ownerId;
   const isReceiver = currentUserId === loan.receiverId;
@@ -163,7 +158,7 @@ function LoanPage() {
       <div className="bg-zinc-800 border border-zinc-700 rounded-xl p-5 mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
         <div>
           <span className="text-zinc-500">Dono</span>
-          <p className="text-white font-medium mt-0.5">{loan.ownerName ?? loan.owner?.name ?? "—"}</p>
+          <p className="text-white font-medium mt-0.5">{loan.owner ?? loan.owner?.name ?? "—"}</p>
         </div>
         <div>
           <span className="text-zinc-500">Recebedor</span>
@@ -177,7 +172,7 @@ function LoanPage() {
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-zinc-500">Data de devolução</span>
-          <p className="text-white font-medium">{loan.returnDate ? new Date(loan.returnDate).toLocaleDateString("pt-BR") : "—"}</p>
+          <p className="text-white font-medium">{loan.startDate ? new Date(loan.startDate).toLocaleDateString("pt-BR") : "—"}</p>
           {/* Recebedor pode editar a data em análise */}
           {isReceiver && status === "analysis" && (
             <button
