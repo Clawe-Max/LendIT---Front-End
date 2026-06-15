@@ -8,7 +8,7 @@ import {
   Tabs,
   TabsContent,
   TabsList,
-  TabsTrigger
+  TabsTrigger,
 } from "../components/common/tabs";
 import Modal from "../components/common/Modal";
 import { useState } from "react";
@@ -16,6 +16,7 @@ import api from "../api/axios";
 import { useAuth } from "../auth/useAuth";
 import { ErrorMessage } from "../components/common/ErrorMessage";
 import { MyLoans } from "../components/User/Myloans";
+import MyDebit from "../components/User/MyDebit";
 
 const DELETE_URL = "/user/me";
 
@@ -93,7 +94,7 @@ function User() {
                   data-[state=active]:text-white
                 "
               >
-                Meus Jogos
+                Meus Débitos
               </UserButton>
             </TabsTrigger>
 
@@ -151,7 +152,7 @@ function User() {
         </div>
 
         <TabsContent className="w-full flex justify-center" value="games">
-          <div className="text-white">Jogos do usuário</div>
+          <MyDebit />
         </TabsContent>
 
         <TabsContent className="w-full flex justify-center" value="orders">

@@ -12,7 +12,6 @@ import { UserContext } from "./user/UserContext";
 import { MyGames } from "./pages/MyGames";
 import { GamePage } from "./pages/GamePage";
 import { GameProvider } from "./games/GameContextProvider";
-import { LoanPage } from "./pages/LoanPage";
 
 function App() {
   return (
