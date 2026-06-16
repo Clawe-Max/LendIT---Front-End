@@ -1,4 +1,4 @@
-import { Trash2, Upload } from "lucide-react";
+import { Image, Trash2, Trash2Icon, Upload } from "lucide-react";
 import Modal from "../common/Modal";
 import { useRef, useState } from "react";
 import api from "../../api/axios";
@@ -19,14 +19,24 @@ const gameCategories = Object.freeze({
 
 const defaultFormData = {
   name: "",
-  category: gameCategories.MESA,
+  category: "",
   description: "",
-  minPlayers: 1,
-  maxPlayers: 1,
-  minAge: 1,
+  minPlayers: "",
+  maxPlayers: "",
+  minAge: "",
 };
 
-function CardGames({ name, category, description, code, refetch, image }) {
+function CardGames({
+  name,
+  category,
+  description,
+  code,
+  refetch,
+  image,
+  minPlayers,
+  maxPlayers,
+  minAge,
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -146,13 +156,19 @@ function CardGames({ name, category, description, code, refetch, image }) {
         <div className="p-4 mt-auto">
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="w-full text-sm bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors"
+            className="w-full text-sm bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors cursor-pointer"
           >
             Editar
           </button>
           <Modal
             isOpen={isEditModalOpen}
-            onClose={() => setIsEditModalOpen(false)}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setFormData(defaultFormData);
+              setFile(null);
+              setError(null);
+              if (inputRef.current) inputRef.current.value = "";
+            }}
             title="Editar o jogo"
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -166,6 +182,7 @@ function CardGames({ name, category, description, code, refetch, image }) {
               <Select
                 name="category"
                 options={gameCategories}
+                placeholder={`Categoria atual: ${category}`}
                 value={formData.category}
                 onChange={handleChange}
               />
@@ -181,7 +198,7 @@ function CardGames({ name, category, description, code, refetch, image }) {
                 type="number"
                 min="0"
                 max="10"
-                placeholder="Quantidade mínima de jogadores"
+                placeholder={`Quantidade mínima atual: ${minPlayers}`}
                 value={formData.minPlayers}
                 onChange={handleChange}
               />
@@ -190,7 +207,7 @@ function CardGames({ name, category, description, code, refetch, image }) {
                 type="number"
                 min="1"
                 max="50"
-                placeholder="Quantidade máxima de jogadores"
+                placeholder={`Quantidade máxima atual: ${maxPlayers}`}
                 value={formData.maxPlayers}
                 onChange={handleChange}
               />
@@ -199,27 +216,46 @@ function CardGames({ name, category, description, code, refetch, image }) {
                 type="number"
                 min="0"
                 max="18"
-                placeholder="Idade mínima para jogar o jogo"
+                placeholder={`Idade mínima atual: ${minAge}`}
                 value={formData.minAge}
                 onChange={handleChange}
               />
-              <label className="w-full p-3focus:ring-2 font-bold text-zinc-100 placeholder:font-bol bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 outline-none focus:border-yellow-500 cursor-pointer">
-                <span className="flex items-center space-x-2 ">
-                  <span className="font-bold text-zinc-500 hover:text-white flex gap-4 ">
-                    <Upload />
-                    Escolha uma imagem para seu jogo
+              <div className="relative w-full">
+                <label className="block w-full p-3focus:ring-2 font-bold text-zinc-100 placeholder:font-bol bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 outline-none focus:border-yellow-500 cursor-pointer">
+                  <span className="flex items-center space-x-2 ">
+                    <span className="font-bold text-zinc-500 hover:text-white flex gap-4 ">
+                      <Upload />
+                      Escolha uma imagem para seu jogo
+                    </span>
+                    <input
+                      ref={inputRef}
+                      type="file"
+                      onChange={handleFileChange}
+                      name="file_upload"
+                      className="hidden"
+                      accept="image/png,image/jpeg"
+                      id="input"
+                    />
                   </span>
-                  <input
-                    ref={inputRef}
-                    type="file"
-                    onChange={handleFileChange}
-                    name="file_upload"
-                    className="hidden"
-                    accept="image/png,image/jpeg"
-                    id="input"
-                  />
-                </span>
-              </label>
+                </label>
+
+                {file && (
+                  <div className="flex items-center gap-2 mt-2 text-sm text-zinc-300">
+                    <Image size={16} />
+                    <span>{file.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFile(null);
+                        if (inputRef.current) inputRef.current.value = "";
+                      }}
+                      className="flex items-center justify-center cursor-pointer text-zinc-400 hover:text-red-400 transition"
+                    >
+                      <Trash2Icon size={16} />
+                    </button>
+                  </div>
+                )}
+              </div>
               <button className="bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors cursor-pointer">
                 Editar o jogo
               </button>

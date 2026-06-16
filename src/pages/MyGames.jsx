@@ -1,4 +1,4 @@
-import { CirclePlus, DicesIcon, Upload } from "lucide-react";
+import { CirclePlus, DicesIcon, Image, Trash2Icon, Upload } from "lucide-react";
 import { CardGames } from "../components/MyGames/CardGames";
 import { useRef, useState } from "react";
 import Modal from "../components/common/Modal";
@@ -9,6 +9,7 @@ import { Trash2 } from "lucide-react";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import { truncateText } from "../lib/truncateText";
 import { Select } from "../components/common/Select";
+import { ErrorMessage } from "../components/common/ErrorMessage";
 
 const GAME_URL = "/games";
 
@@ -23,7 +24,7 @@ const gameCategories = Object.freeze({
 
 const defaultFormData = {
   name: "",
-  category: gameCategories.MESA,
+  category: "",
   description: "",
   minPlayers: null,
   maxPlayers: null,
@@ -51,19 +52,33 @@ function MyGames() {
   console.log(data);
   async function handleSubmit(e) {
     e.preventDefault();
+
+    const { name, category, description, minPlayers, maxPlayers, minAge } =
+      formData;
+
+    if (
+      !name?.trim() ||
+      !category?.trim() ||
+      !description?.trim() ||
+      !minPlayers ||
+      !maxPlayers ||
+      !minAge ||
+      !file
+    ) {
+      return setError("Preencha todos os campos e selecione uma imagem.");
+    }
+
     try {
       setLoadingCreate(true);
-      const { name, category, description, minPlayers, maxPlayers, minAge } =
-        formData;
 
       const newGame = new FormData();
-      if (name.trim()) newGame.append("name", name);
-      if (category.trim()) newGame.append("category", category);
-      if (description.trim()) newGame.append("description", description);
+      newGame.append("name", name);
+      newGame.append("category", category);
+      newGame.append("description", description);
       newGame.append("minPlayers", String(minPlayers));
       newGame.append("maxPlayers", String(maxPlayers));
       newGame.append("minAge", String(minAge));
-      if (file) newGame.append("image", file);
+      newGame.append("image", file);
 
       await api.post(GAME_URL, newGame, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -128,14 +143,20 @@ function MyGames() {
                 <div className="p-4 mt-auto">
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="w-full text-sm bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors"
+                    className="w-full text-sm bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors cursor-pointer"
                   >
                     Empreste um novo jogo.
                   </button>
 
                   <Modal
                     isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => {
+                      setIsModalOpen(false);
+                      setFormData(defaultFormData);
+                      setFile(null);
+                      setError(null);
+                      if (inputRef.current) inputRef.current.value = "";
+                    }}
                     title="Adicionar novo jogo"
                   >
                     <form
@@ -151,9 +172,8 @@ function MyGames() {
                       />
                       <Select
                         name="category"
-                        type="text"
-                        placeholder="Categoria"
                         options={gameCategories}
+                        placeholder="Escolha uma categoria"
                         value={formData.category}
                         onChange={handleChange}
                       />
@@ -209,6 +229,23 @@ function MyGames() {
                         </span>
                       </label>
 
+                      {file && (
+                        <div className="flex items-center gap-2 mt-2 text-sm text-zinc-300">
+                          <Image size={16} />
+                          <span>{file.name}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFile(null);
+                              if (inputRef.current) inputRef.current.value = "";
+                            }}
+                            className="flex items-center justify-center cursor-pointer text-zinc-400 hover:text-red-400 transition"
+                          >
+                            <Trash2Icon size={16} />
+                          </button>
+                        </div>
+                      )}
+                      <ErrorMessage message={error} />
                       <button
                         disabled={loadingCreate}
                         className="bg-yellow-500 hover:bg-yellow-400 text-zinc-900 font-bold py-2 rounded-lg transition-colors cursor-pointer"
@@ -230,6 +267,9 @@ function MyGames() {
                 refetch={refetch}
                 code={game.code}
                 image={game.imagePath}
+                minPlayers={game.minPlayers}
+                maxPlayers={game.maxPlayers}
+                minAge={game.minAge}
               />
             ))}
           </div>
