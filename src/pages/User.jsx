@@ -50,7 +50,7 @@ function User() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-56px)] flex flex-col items-center gap-5 pt-[5vh] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto">
+    <div className="min-h-[calc(100vh-56px)] flex flex-col items-center gap-5 pt-[5vh] bg-zinc-900 text-white px-6 py-8 max-w-5xl mx-auto relative">
       <div className="flex flex-col gap-5 items-center ">
         {user.data.picturePath ? (
           <img

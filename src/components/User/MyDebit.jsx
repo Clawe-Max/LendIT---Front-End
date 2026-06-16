@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, ChevronRight, Gamepad2, Loader2 } from "lucide-react";
 import api from "../../api/axios";
+import PayFinePopup from "../Fine/PayFinePopup";
 
 const FINE_URL = "/fine/me";
 
@@ -30,6 +31,10 @@ export default function MyDebit() {
   const [debits, setDebits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [currentDebit, setCurrentDebit] = useState(
+    {id: '', loanId: '', debtorId: '', value: 0, startDate: '', gameName: '', deadline: ''}
+  );
 
   useEffect(() => {
     async function fetchDebits() {
@@ -77,6 +82,7 @@ export default function MyDebit() {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-6 text-white">
+      {showPopup && <PayFinePopup debit={currentDebit} />}
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -104,7 +110,7 @@ export default function MyDebit() {
           return (
             <li
               key={debit.id}
-              className="flex items-center justify-between rounded-lg px-4 py-3 transition-colors"
+              className="flex items-center justify-between rounded-lg px-4 py-3 transition-colors cursor-pointer"
               style={{
                 backgroundColor: "rgba(255,255,255,0.05)",
                 border: "1px solid rgba(255,255,255,0.07)",
@@ -117,6 +123,10 @@ export default function MyDebit() {
                 (e.currentTarget.style.backgroundColor =
                   "rgba(255,255,255,0.05)")
               }
+              onClick={() => {
+                setCurrentDebit(debit);
+                setShowPopup(true);
+              }}
             >
               {/* Left */}
               <div className="flex items-center gap-3">

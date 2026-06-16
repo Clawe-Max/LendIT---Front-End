@@ -2,7 +2,7 @@ import { PackageSearch } from "lucide-react";
 import { useFetch } from "../../hooks/useFetch";
 import LoadingSpinner from "../common/LoadingSpinner";
 import { LoanCard } from "../Loan/LoanCard";
-import { use, useContext } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../user/UserContext";
 
 const LOANS_URL = "/loan/me";
